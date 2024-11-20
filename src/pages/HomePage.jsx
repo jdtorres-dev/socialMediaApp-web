@@ -1,10 +1,16 @@
-import React from 'react'
-import Home from '../components/Home'
+import React from "react";
+import { Button } from "antd";
+import { useAuth } from "../context/AuthContext";
 
 const HomePage = () => {
-  return (
-    <Home/>
-  )
-}
+  const { logout } = useAuth();
 
-export default HomePage
+  return (
+    <>
+      <div>HomePage</div>
+      <Button onClick={() => logout()}>Logout</Button>
+    </>
+  );
+};
+
+export default HomePage;
