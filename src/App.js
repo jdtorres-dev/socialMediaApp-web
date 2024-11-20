@@ -1,13 +1,21 @@
-import logo from './logo.svg';
-import './App.css';
-import { Navigate, Route, Routes } from 'react-router-dom';
-import LoginPage from './pages/LoginPage';
+import { Navigate, Route, Routes } from "react-router-dom";
+
+import LoginPage from "./pages/LoginPage";
+import SignupPage from "./pages/SignupPage";
+import NotFoundPage from "./pages/NotFoundPage";
+import HomePage from "./pages/HomePage";
+
+import "./App.css";
 
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/login"/>}/>
-      <Route path='/login' element={<LoginPage/>}/>
+      <Route path="/" element={<Navigate to="/login" />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/signup" element={<SignupPage />} />
+      <Route path="/not-found" element={<NotFoundPage />} />
+      <Route path="*" element={<Navigate to="/not-found" />} />
+      <Route path="/home" element={<HomePage />} />
     </Routes>
   );
 }
