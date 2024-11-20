@@ -1,0 +1,342 @@
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Form, Input, Button, message, Spin, Upload } from "antd";
+import {
+  LockOutlined,
+  UserOutlined,
+  MailOutlined,
+  UploadOutlined,
+} from "@ant-design/icons";
+import { BsFillExclamationCircleFill, BsCheckCircleFill } from "react-icons/bs";
+import UserService from "../service/UserService";
+
+import "../styles/SignupPage.css";
+
+function getBase64(img, callback) {
+  const reader = new FileReader();
+  reader.addEventListener("load", () => callback(reader.result));
+  reader.readAsDataURL(img);
+}
+
+function beforeUpload(file) {
+  const isJpgOrPng =
+    file.type === "image/jpeg" || file.type === "image/png" || file.type === "";
+  if (!isJpgOrPng) {
+    message.error("You can only upload JPG/PNG file!");
+  }
+  const isLt2M = file.size / 1024 / 1024 < 2;
+  if (!isLt2M) {
+    message.error("Image must smaller than 2MB!");
+  }
+  return isJpgOrPng && isLt2M;
+}
+
+const SignupPage = () => {
+  const [form] = Form.useForm();
+  const navigate = useNavigate();
+  const [image, setImage] = useState("");
+
+  const [usernameIsLoading, setUsernameIsLoading] = useState(false);
+  const [usernameExists, setUsernameExists] = useState(false);
+  const [usernameValid, setUsernameValid] = useState(false);
+
+  const [emailIsLoading, setEmailIsLoading] = useState(false);
+  const [emailExists, setEmailExists] = useState(false);
+  const [emailValid, setEmailValid] = useState(false);
+
+  // const beforeUpload = (file) => {
+  //   const allowedTypes = [
+  //     "image/png",
+  //     "image/jpeg",
+  //     "image/webp",
+  //     "image/svg+xml",
+  //   ];
+  //   const isImage = file.type.startsWith("image/");
+  //   const isValidType = allowedTypes.includes(file.type);
+
+  //   if (!isImage) {
+  //     message.error("You can only upload image files!");
+  //     return false;
+  //   }
+
+  //   if (!isValidType) {
+  //     message.error("You can only upload PNG, JPEG, WebP, or SVG files!");
+  //     return false;
+  //   }
+
+  //   return true;
+  // };
+
+  // const handleImageUpload = (file) => {
+  //   console.log("File being uploaded:", file); // Log the file being passed to handleImageUpload
+
+  //   if (file && file.type.startsWith("image/")) {
+  //     const reader = new FileReader();
+  //     reader.onloadend = () => {
+  //       const base64String = reader.result;
+  //       console.log("Base64 string generated:", base64String); // Log the base64 string generated
+  //       setImage(base64String); // Set image to the base64 string
+  //     };
+
+  //     reader.readAsDataURL(file); // Convert the file to base64
+  //   } else {
+  //     message.error("Please upload a valid image.");
+  //   }
+  // };
+
+  // const handleImageUpload = (e) => {
+  //   console.log(e.target.files);
+  //   const data = new FileReader();
+  //   data.addEventListener("load", () => {
+  //     setImage(data.result);
+  //   });
+  //   data.readAsDataURL(e.target.files[0]);
+  // };
+  // console.log(image);
+
+  // useEffect(() => {
+  //   console.log("Final image URL:", image);
+  // }, [image]);
+
+  const checkUsername = async (value) => {
+    if (!value || value.length < 3) {
+      setUsernameExists(false);
+      setUsernameValid(false);
+      return;
+    }
+    setUsernameIsLoading(true);
+    try {
+      const response = await UserService.checkUsername(value);
+      if (response.status === 200) {
+        form.setFields([
+          {
+            name: "username",
+            errors: ["Username is already taken."],
+          },
+        ]);
+        setUsernameExists(true);
+        setUsernameValid(false);
+      } else {
+        form.setFields([
+          {
+            name: "username",
+            errors: [],
+          },
+        ]);
+        setUsernameExists(false);
+        setUsernameValid(true);
+      }
+      setUsernameIsLoading(false);
+    } catch (error) {
+      setUsernameIsLoading(false);
+      setUsernameExists(false);
+      setUsernameValid(true);
+      console.error("Error checking username:", error);
+    }
+  };
+
+  const checkEmail = async (value) => {
+    if (!value || value.length < 5) {
+      setEmailExists(false);
+      setEmailValid(false);
+      return;
+    }
+    setEmailIsLoading(true);
+    try {
+      const response = await UserService.checkEmail(value);
+
+      if (response.status === 200) {
+        form.setFields([
+          {
+            name: "email",
+            errors: ["Email is already registered."],
+          },
+        ]);
+        setEmailExists(true);
+        setEmailValid(false);
+      } else {
+        form.setFields([
+          {
+            name: "email",
+            errors: [],
+          },
+        ]);
+        setEmailExists(false);
+        setEmailValid(true);
+      }
+      setEmailIsLoading(false);
+    } catch (error) {
+      setEmailIsLoading(false);
+      setEmailExists(false);
+      setEmailValid(true);
+      console.error("Error checking email:", error);
+    }
+  };
+
+  const onFinish = async (values) => {
+    console.log("Final image URL:", image);
+    try {
+      const requestData = {
+        ...values,
+        imageUrl: image,
+      };
+      console.log(requestData);
+
+      const response = await UserService.checkUsernameAndEmail(
+        values.username,
+        values.email
+      );
+
+      if (response.status === 200) {
+        await UserService.createUser(requestData);
+
+        message.success(
+          "User created successfully! You may now login using your username and password."
+        );
+        navigate("/login");
+      } else {
+        if (response.data.field.includes("username")) {
+          form.setFields([
+            {
+              name: "username",
+              errors: ["Username is already taken."],
+            },
+          ]);
+        }
+        if (response.data.field.includes("email")) {
+          form.setFields([
+            {
+              name: "email",
+              errors: ["Email is already registered."],
+            },
+          ]);
+        }
+      }
+    } catch (error) {
+      console.error("Error during form submission:", error);
+      message.error("Error creating user. Please try again.");
+    }
+  };
+
+  const onFinishFailed = (errorInfo) => {
+    console.log("Form submission failed:", errorInfo);
+  };
+
+  return (
+    <>
+      <div className="container-signup">
+        <div className="main-signup">
+          <h3 style={{ textAlign: "center" }}>Create an account</h3>
+          <Form
+            name="signup"
+            initialValues={{
+              remember: true,
+            }}
+            onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
+            form={form}
+          >
+            <Form.Item
+              name="name"
+              rules={[
+                { required: true, message: "Please input your name." },
+                { min: 3, message: "Name must be at least 3 characters long." },
+              ]}
+            >
+              <Input
+                className="signup-input"
+                prefix={<UserOutlined style={{ fontSize: 13 }} />}
+                placeholder="Enter Your Name"
+              />
+            </Form.Item>
+
+            <Form.Item
+              name="username"
+              rules={[
+                { required: true, message: "Please input a username." },
+                {
+                  min: 3,
+                  message: "Username must be at least 3 characters long.",
+                },
+              ]}
+            >
+              <Input
+                className="signup-input"
+                prefix={<UserOutlined style={{ fontSize: 13 }} />}
+                suffix={
+                  usernameIsLoading ? (
+                    <Spin />
+                  ) : usernameExists ? (
+                    <BsFillExclamationCircleFill style={{ color: "red" }} />
+                  ) : usernameValid ? (
+                    <BsCheckCircleFill style={{ color: "green" }} />
+                  ) : null
+                }
+                placeholder="Enter Your Username"
+                onBlur={(e) => checkUsername(e.target.value)}
+              />
+            </Form.Item>
+
+            <Form.Item
+              name="email"
+              rules={[
+                { required: true, message: "Please input an email." },
+                {
+                  type: "email",
+                  message: "Please enter a valid email.",
+                },
+              ]}
+            >
+              <Input
+                className="signup-input"
+                prefix={<MailOutlined style={{ fontSize: 13 }} />}
+                suffix={
+                  emailIsLoading ? (
+                    <Spin />
+                  ) : emailExists ? (
+                    <BsFillExclamationCircleFill style={{ color: "red" }} />
+                  ) : emailValid ? (
+                    <BsCheckCircleFill style={{ color: "green" }} />
+                  ) : null
+                }
+                placeholder="Enter Your Email"
+                onBlur={(e) => checkEmail(e.target.value)}
+              />
+            </Form.Item>
+
+            <Form.Item
+              name="password"
+              rules={[{ required: true, message: "Please enter password." }]}
+            >
+              <Input.Password
+                className="signup-input"
+                prefix={<LockOutlined style={{ fontSize: 13 }} />}
+                type="password"
+                placeholder="Enter Your Password"
+              />
+            </Form.Item>
+
+            <Form.Item>
+              <Button
+                type="primary"
+                htmlType="submit"
+                className="signup-form-button"
+                style={{ marginTop: 3 }}
+              >
+                Sign Up
+              </Button>
+            </Form.Item>
+          </Form>
+
+          <div style={{ marginTop: -12 }}>
+            <h6 style={{ textAlign: "center" }}>
+              Already have an account? <Link to="/login">Login</Link>
+            </h6>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default SignupPage;
