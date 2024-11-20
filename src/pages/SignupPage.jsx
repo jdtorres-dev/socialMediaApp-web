@@ -1,35 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Form, Input, Button, message, Spin, Upload } from "antd";
-import {
-  LockOutlined,
-  UserOutlined,
-  MailOutlined,
-  UploadOutlined,
-} from "@ant-design/icons";
+import { Form, Input, Button, message, Spin } from "antd";
+import { LockOutlined, UserOutlined, MailOutlined } from "@ant-design/icons";
 import { BsFillExclamationCircleFill, BsCheckCircleFill } from "react-icons/bs";
 import UserService from "../service/UserService";
 
 import "../styles/SignupPage.css";
-
-function getBase64(img, callback) {
-  const reader = new FileReader();
-  reader.addEventListener("load", () => callback(reader.result));
-  reader.readAsDataURL(img);
-}
-
-function beforeUpload(file) {
-  const isJpgOrPng =
-    file.type === "image/jpeg" || file.type === "image/png" || file.type === "";
-  if (!isJpgOrPng) {
-    message.error("You can only upload JPG/PNG file!");
-  }
-  const isLt2M = file.size / 1024 / 1024 < 2;
-  if (!isLt2M) {
-    message.error("Image must smaller than 2MB!");
-  }
-  return isJpgOrPng && isLt2M;
-}
 
 const SignupPage = () => {
   const [form] = Form.useForm();
@@ -44,59 +20,44 @@ const SignupPage = () => {
   const [emailExists, setEmailExists] = useState(false);
   const [emailValid, setEmailValid] = useState(false);
 
-  // const beforeUpload = (file) => {
-  //   const allowedTypes = [
-  //     "image/png",
-  //     "image/jpeg",
-  //     "image/webp",
-  //     "image/svg+xml",
-  //   ];
-  //   const isImage = file.type.startsWith("image/");
-  //   const isValidType = allowedTypes.includes(file.type);
+  const beforeUpload = (file) => {
+    const allowedTypes = [
+      "image/png",
+      "image/jpeg",
+      "image/webp",
+      "image/svg+xml",
+    ];
+    const isImage = file.type.startsWith("image/");
+    const isValidType = allowedTypes.includes(file.type);
 
-  //   if (!isImage) {
-  //     message.error("You can only upload image files!");
-  //     return false;
-  //   }
+    if (!isImage) {
+      message.error("You can only upload image files!");
+      return false;
+    }
 
-  //   if (!isValidType) {
-  //     message.error("You can only upload PNG, JPEG, WebP, or SVG files!");
-  //     return false;
-  //   }
+    if (!isValidType) {
+      message.error("You can only upload PNG, JPEG, WebP, or SVG files!");
+      return false;
+    }
 
-  //   return true;
-  // };
+    return true;
+  };
 
-  // const handleImageUpload = (file) => {
-  //   console.log("File being uploaded:", file); // Log the file being passed to handleImageUpload
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
 
-  //   if (file && file.type.startsWith("image/")) {
-  //     const reader = new FileReader();
-  //     reader.onloadend = () => {
-  //       const base64String = reader.result;
-  //       console.log("Base64 string generated:", base64String); // Log the base64 string generated
-  //       setImage(base64String); // Set image to the base64 string
-  //     };
+    if (file && beforeUpload(file)) {
+      const data = new FileReader();
+      data.addEventListener("load", () => {
+        setImage(data.result);
+      });
+      data.readAsDataURL(file);
+    }
+  };
 
-  //     reader.readAsDataURL(file); // Convert the file to base64
-  //   } else {
-  //     message.error("Please upload a valid image.");
-  //   }
-  // };
-
-  // const handleImageUpload = (e) => {
-  //   console.log(e.target.files);
-  //   const data = new FileReader();
-  //   data.addEventListener("load", () => {
-  //     setImage(data.result);
-  //   });
-  //   data.readAsDataURL(e.target.files[0]);
-  // };
-  // console.log(image);
-
-  // useEffect(() => {
-  //   console.log("Final image URL:", image);
-  // }, [image]);
+  useEffect(() => {
+    console.log("Final image URL:", image);
+  }, [image]);
 
   const checkUsername = async (value) => {
     if (!value || value.length < 3) {
@@ -182,36 +143,12 @@ const SignupPage = () => {
       };
       console.log(requestData);
 
-      const response = await UserService.checkUsernameAndEmail(
-        values.username,
-        values.email
+      await UserService.createUser(requestData);
+
+      message.success(
+        "User created successfully! You may now login using your username and password."
       );
-
-      if (response.status === 200) {
-        await UserService.createUser(requestData);
-
-        message.success(
-          "User created successfully! You may now login using your username and password."
-        );
-        navigate("/login");
-      } else {
-        if (response.data.field.includes("username")) {
-          form.setFields([
-            {
-              name: "username",
-              errors: ["Username is already taken."],
-            },
-          ]);
-        }
-        if (response.data.field.includes("email")) {
-          form.setFields([
-            {
-              name: "email",
-              errors: ["Email is already registered."],
-            },
-          ]);
-        }
-      }
+      navigate("/login");
     } catch (error) {
       console.error("Error during form submission:", error);
       message.error("Error creating user. Please try again.");
@@ -227,106 +164,163 @@ const SignupPage = () => {
       <div className="container-signup">
         <div className="main-signup">
           <h3 style={{ textAlign: "center" }}>Create an account</h3>
-          <Form
-            name="signup"
-            initialValues={{
-              remember: true,
+
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "start",
+              gap: 20,
             }}
-            onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
-            form={form}
           >
-            <Form.Item
-              name="name"
-              rules={[
-                { required: true, message: "Please input your name." },
-                { min: 3, message: "Name must be at least 3 characters long." },
-              ]}
-            >
-              <Input
-                className="signup-input"
-                prefix={<UserOutlined style={{ fontSize: 13 }} />}
-                placeholder="Enter Your Name"
-              />
-            </Form.Item>
+            <div style={{ marginTop: -10 }}>
+              {image ? (
+                <img
+                  src={image}
+                  alt="avatar"
+                  style={{ height: 100, width: 100, borderRadius: "50%" }}
+                />
+              ) : (
+                <img
+                  src="https://www.svgrepo.com/show/420323/avatar-avocado-food.svg"
+                  alt="placeholder"
+                  style={{ height: 100, width: 100 }}
+                />
+              )}
+            </div>
 
-            <Form.Item
-              name="username"
-              rules={[
-                { required: true, message: "Please input a username." },
-                {
-                  min: 3,
-                  message: "Username must be at least 3 characters long.",
-                },
-              ]}
-            >
-              <Input
-                className="signup-input"
-                prefix={<UserOutlined style={{ fontSize: 13 }} />}
-                suffix={
-                  usernameIsLoading ? (
-                    <Spin />
-                  ) : usernameExists ? (
-                    <BsFillExclamationCircleFill style={{ color: "red" }} />
-                  ) : usernameValid ? (
-                    <BsCheckCircleFill style={{ color: "green" }} />
-                  ) : null
-                }
-                placeholder="Enter Your Username"
-                onBlur={(e) => checkUsername(e.target.value)}
-              />
-            </Form.Item>
-
-            <Form.Item
-              name="email"
-              rules={[
-                { required: true, message: "Please input an email." },
-                {
-                  type: "email",
-                  message: "Please enter a valid email.",
-                },
-              ]}
-            >
-              <Input
-                className="signup-input"
-                prefix={<MailOutlined style={{ fontSize: 13 }} />}
-                suffix={
-                  emailIsLoading ? (
-                    <Spin />
-                  ) : emailExists ? (
-                    <BsFillExclamationCircleFill style={{ color: "red" }} />
-                  ) : emailValid ? (
-                    <BsCheckCircleFill style={{ color: "green" }} />
-                  ) : null
-                }
-                placeholder="Enter Your Email"
-                onBlur={(e) => checkEmail(e.target.value)}
-              />
-            </Form.Item>
-
-            <Form.Item
-              name="password"
-              rules={[{ required: true, message: "Please enter password." }]}
-            >
-              <Input.Password
-                className="signup-input"
-                prefix={<LockOutlined style={{ fontSize: 13 }} />}
-                type="password"
-                placeholder="Enter Your Password"
-              />
-            </Form.Item>
-
-            <Form.Item>
-              <Button
-                type="primary"
-                htmlType="submit"
-                className="signup-form-button"
-                style={{ marginTop: 3 }}
+            <div>
+              <Form
+                name="signup"
+                initialValues={{
+                  remember: true,
+                }}
+                onFinish={onFinish}
+                onFinishFailed={onFinishFailed}
+                form={form}
               >
-                Sign Up
-              </Button>
-            </Form.Item>
-          </Form>
+                <Form.Item
+                  name="name"
+                  rules={[
+                    { required: true, message: "Please input your name." },
+                    {
+                      min: 3,
+                      message: "Name must be at least 3 characters long.",
+                    },
+                    {
+                      pattern: /^[A-Za-z]+$/,
+                      message: "Name must only contain letters.",
+                    },
+                  ]}
+                >
+                  <Input
+                    className="signup-input"
+                    prefix={<UserOutlined style={{ fontSize: 13 }} />}
+                    placeholder="Enter Your Name"
+                  />
+                </Form.Item>
+
+                <Form.Item
+                  name="username"
+                  rules={[
+                    { required: true, message: "Please input a username." },
+                    {
+                      min: 3,
+                      message: "Username must be at least 3 characters long.",
+                    },
+                  ]}
+                >
+                  <Input
+                    className="signup-input"
+                    prefix={<UserOutlined style={{ fontSize: 13 }} />}
+                    suffix={
+                      usernameIsLoading ? (
+                        <Spin />
+                      ) : usernameExists ? (
+                        <BsFillExclamationCircleFill style={{ color: "red" }} />
+                      ) : usernameValid ? (
+                        <BsCheckCircleFill style={{ color: "green" }} />
+                      ) : null
+                    }
+                    placeholder="Enter Your Username"
+                    onBlur={(e) => checkUsername(e.target.value)}
+                  />
+                </Form.Item>
+              </Form>
+            </div>
+          </div>
+
+          {/* upload file */}
+          <input
+            type="file"
+            onChange={handleImageUpload}
+            style={{
+              whiteSpace: "wrap",
+              marginBottom: 10,
+              width: "100%",
+              color: "gray",
+              fontWeight: 400,
+            }}
+          />
+
+          <div>
+            <Form
+              name="signup"
+              initialValues={{
+                remember: true,
+              }}
+              onFinish={onFinish}
+              onFinishFailed={onFinishFailed}
+              form={form}
+            >
+              <Form.Item
+                name="email"
+                rules={[
+                  { required: true, message: "Please input an email." },
+                  { type: "email", message: "Please enter a valid email." },
+                ]}
+              >
+                <Input
+                  className="signup-input"
+                  prefix={<MailOutlined style={{ fontSize: 13 }} />}
+                  suffix={
+                    emailIsLoading ? (
+                      <Spin />
+                    ) : emailExists ? (
+                      <BsFillExclamationCircleFill style={{ color: "red" }} />
+                    ) : emailValid ? (
+                      <BsCheckCircleFill style={{ color: "green" }} />
+                    ) : null
+                  }
+                  placeholder="Enter Your Email"
+                  onBlur={(e) => checkEmail(e.target.value)}
+                />
+              </Form.Item>
+
+              <Form.Item
+                name="password"
+                rules={[{ required: true, message: "Please enter password." }]}
+              >
+                <Input.Password
+                  className="signup-input"
+                  prefix={<LockOutlined style={{ fontSize: 13 }} />}
+                  type="password"
+                  placeholder="Enter Your Password"
+                />
+              </Form.Item>
+
+              <Form.Item>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  className="signup-form-button"
+                  style={{ marginTop: 3 }}
+                >
+                  Sign Up
+                </Button>
+              </Form.Item>
+            </Form>
+          </div>
 
           <div style={{ marginTop: -12 }}>
             <h6 style={{ textAlign: "center" }}>

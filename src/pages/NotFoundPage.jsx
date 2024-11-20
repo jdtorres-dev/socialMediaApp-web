@@ -40,10 +40,11 @@ const NotFoundPage = () => {
             removed, name changed or is temporary unavailable
           </div>
           <Button
+            type="default"
             style={{
               marginTop: 30,
-              color: "white",
-              backgroundColor: "orange",
+              // color: "white",
+              // backgroundColor: "orange",
               borderRadius: 15,
             }}
             onClick={() => {
