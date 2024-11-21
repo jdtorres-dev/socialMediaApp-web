@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Layout, Menu, Typography, Dropdown, Switch, Space, Row, Col } from 'antd';
+import { Layout, Menu, Typography, Dropdown, Switch, Space, Row, Col, Modal, message } from 'antd';
 import { SettingOutlined, PoweroffOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const { Header } = Layout;
 
@@ -25,7 +26,16 @@ const Navbar = () => {
     setDarkMode(checked);
   };
 
-  const logout = () => {
+  const showConfirmLogout = () => {
+    Modal.confirm({
+      title: 'Logout',
+      content: 'Are you sure you want to exit this page?',
+      onOk: () => handleLogout(),
+    });
+  };
+  const { logout } = useAuth();
+  const handleLogout = () => {
+    logout()
     console.log('Logging out...');
   };
 
@@ -37,7 +47,7 @@ const Navbar = () => {
           <Switch checked={darkMode} onChange={toggleDarkMode} />
         </Space>
       </Menu.Item>
-      <Menu.Item key="2" icon={<PoweroffOutlined />} onClick={logout}>
+      <Menu.Item key="2" icon={<PoweroffOutlined />} onClick={showConfirmLogout}>
         Logout
       </Menu.Item>
     </Menu>

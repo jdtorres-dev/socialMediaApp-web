@@ -1,10 +1,15 @@
 import React, { useState } from 'react';
-import { Form, Input, Button, Upload, message, Typography, Space, Row, Col, Tooltip, Modal } from 'antd';
+import { Form, Input, Button, Upload, message, Row, Col, Tooltip, Modal } from 'antd';
 import { PictureOutlined } from '@ant-design/icons';
-
+import PostService from '../service/PostService';
+import { useAuth } from "../context/AuthContext";
 const AddPost = () => {
-  const [form] = Form.useForm(); // Initialize the form
-  const [imageUrl, setImageUrl] = useState(null); // For storing image preview URL
+  const [form] = Form.useForm(); 
+  const [imageUrl, setImageUrl] = useState(null); 
+
+ const { currentUser } = useAuth();
+  console.log('id',currentUser.id)
+
 
   const handleImageChange = (info) => {
     if (info.file.status === 'done') {
@@ -20,18 +25,39 @@ const AddPost = () => {
     Modal.confirm({
       title: 'Are you sure you want to add a post?',
       content: 'Once posted, your post will be visible to others.',
-      onOk: () => handleSubmit(values),  // Submit form if confirmed
+      onOk: () => handleSubmit(values),
       onCancel: () => {
         message.info('Post canceled');
       },
     });
   };
 
-  const handleSubmit = (values) => {
+  const handleSubmit = async (values) => {
+    console.log("Final image URL:", imageUrl);
     console.log('Post Values:', values);
-    message.success('Post added successfully!');
-    form.resetFields();
-    setImageUrl(null);  
+    try{
+
+      const requestData = {
+        ...values,
+        imageUrl: "sample",
+        user: currentUser
+      };
+      console.log(requestData);
+      console.log("user",currentUser)
+
+      await PostService.createPost(requestData);
+      message.success(
+        "Post successfully uploaded!"
+      );
+      form.resetFields();
+      setImageUrl(null);  
+
+    } catch (error) {
+
+      console.error("Error during form submission:", error);
+      message.error("Error uploading post. Please try again.");
+
+    }
   };
 
   return (
@@ -40,7 +66,9 @@ const AddPost = () => {
         form={form}
         name="add_post"
         onFinish={showConfirm}
-        initialValues={{ body: '', image: '' }} 
+        initialValues={{
+          remember: true
+        }}
         layout="vertical"
       >
         <Row gutter={24}>
