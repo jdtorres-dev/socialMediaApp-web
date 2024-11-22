@@ -13,7 +13,7 @@ class PostService{
     
 
     createPost(post){
-        return http.post("/post", post);
+        return http.post("/post/createPost", post);
     }
 
 }

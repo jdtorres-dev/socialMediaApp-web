@@ -253,6 +253,7 @@ const SignupPage = () => {
           {/* upload file */}
           <input
             type="file"
+            accept='image/*'
             onChange={handleImageUpload}
             style={{
               whiteSpace: "wrap",

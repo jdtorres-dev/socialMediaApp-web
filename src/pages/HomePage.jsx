@@ -14,7 +14,6 @@ const HomePage = () => {
     <>
       
       <Home/>
-      <Button onClick={() => logout()}>Logout</Button>
       <Button onClick={() => setOpenModal(true)}></Button>
       <UserModal isModalOpen={openModal} onClose={() => setOpenModal(false)} />
     </>
