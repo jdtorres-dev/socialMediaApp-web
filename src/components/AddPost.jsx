@@ -1,25 +1,90 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form, Input, Button, Upload, message, Row, Col, Tooltip, Modal } from 'antd';
 import { PictureOutlined } from '@ant-design/icons';
 import PostService from '../service/PostService';
 import { useAuth } from "../context/AuthContext";
 const AddPost = () => {
-  const [form] = Form.useForm(); 
-  const [imageUrl, setImageUrl] = useState(null); 
+  const [form] = Form.useForm();
+  const [imageUrl, setImageUrl] = useState("");
 
- const { currentUser } = useAuth();
-  console.log('id',currentUser.id)
+  const { currentUser } = useAuth();
 
+  /*const beforeUpload = (file) => {
+   const allowedTypes = [
+     "image/png",
+     "image/jpeg",
+     "image/webp",
+     "image/svg+xml",
+   ];
+   const isImage = file.type.startsWith("image/");
+   const isValidType = allowedTypes.includes(file.type);
+ 
+   if (!isImage) {
+     message.error("You can only upload image files!");
+     return false;
+   }
+ 
+   if (!isValidType) {
+     message.error("You can only upload PNG, JPEG, WebP, or SVG files!");
+     return false;
+   }
+ 
+   return true;
+ };*/
 
-  const handleImageChange = (info) => {
+  // Handle the file change event in the Upload component
+  /*const handleImageChange = (info) => {
     if (info.file.status === 'done') {
       const fileUrl = URL.createObjectURL(info.file.originFileObj);
-      setImageUrl(fileUrl);
-      form.setFieldsValue({ image: fileUrl }); 
-    } else if (info.file.status === 'error') {
+      setImageUrl(fileUrl); // Set the image URL after upload
+        } else if (info.file.status === 'error') {
       message.error('Image upload failed.');
     }
+  };*/
+
+  /*useEffect(() => {
+    console.log('Updated imageUrl:', imageUrl); // This will log the imageUrl after it's been updated
+  }, [imageUrl]);*/
+
+  const beforeUpload = (file) => {
+    const allowedTypes = [
+      "image/png",
+      "image/jpeg",
+      "image/webp",
+      "image/svg+xml",
+    ];
+    const isImage = file.type.startsWith("image/");
+    const isValidType = allowedTypes.includes(file.type);
+
+    if (!isImage) {
+      message.error("You can only upload image files!");
+      return false;
+      
+    }
+
+    if (!isValidType) {
+      message.error("You can only upload PNG, JPEG, WebP, or SVG files!");
+      return false;
+    }
+
+    return true;
   };
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+
+    if (file && beforeUpload(file)) {
+      const data = new FileReader();
+      data.addEventListener("load", () => {
+        setImageUrl(data.result);
+      });
+      data.readAsDataURL(file);
+    }
+  };
+
+  useEffect(() => {
+    console.log("Final image URL:", imageUrl);
+  }, [imageUrl]);
 
   const showConfirm = (values) => {
     Modal.confirm({
@@ -35,22 +100,22 @@ const AddPost = () => {
   const handleSubmit = async (values) => {
     console.log("Final image URL:", imageUrl);
     console.log('Post Values:', values);
-    try{
+    try {
 
       const requestData = {
         ...values,
-        imageUrl: "sample",
+        imageUrl: imageUrl,
         user: currentUser
       };
       console.log(requestData);
-      console.log("user",currentUser)
 
       await PostService.createPost(requestData);
       message.success(
         "Post successfully uploaded!"
       );
+      setImageUrl("");
       form.resetFields();
-      setImageUrl(null);  
+      
 
     } catch (error) {
 
@@ -61,7 +126,7 @@ const AddPost = () => {
   };
 
   return (
-    <div style={{ maxWidth: 500, margin: '0 auto', padding: '15px', border: '1px solid #e0e0e0', borderRadius: '8px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', backgroundColor: 'white' }}>
+    <div style={{ maxWidth: 550, margin: '0 auto', padding: '15px', border: '1px solid #e0e0e0', borderRadius: '8px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', backgroundColor: 'white' }}>
       <Form
         form={form}
         name="add_post"
@@ -72,7 +137,7 @@ const AddPost = () => {
         layout="vertical"
       >
         <Row gutter={24}>
-          <Col span={21}>
+          <Col span={19}>
             <Form.Item
               label="What's on your mind?"
               name="body"
@@ -85,21 +150,34 @@ const AddPost = () => {
             </Form.Item>
           </Col>
 
-          <Col span={3} style={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <Form.Item name="image" label=" " style={{ marginBottom: 0 }}>
-              <Tooltip title="Upload an image">
+          <Col span={5} style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 30 }}>
+            {/*<Tooltip title="Upload an image"> 
                 <Upload
                   name="image"
                   listType="picture"
                   accept="image/*"
                   showUploadList={false}
                   onChange={handleImageChange}
-                  beforeUpload={() => false}  // Prevent auto-upload to a server
+                  beforeUpload={beforeUpload}  // Prevent auto-upload to a server
                 >
                   <Button size="large" icon={<PictureOutlined />} />
                 </Upload>
-              </Tooltip>
-            </Form.Item>
+              </Tooltip>*/}
+            <Tooltip title="Upload an image"> 
+              <input
+                name='image'
+                accept='image/*'
+                type="file"
+                onChange={handleImageUpload}
+                style={{
+                  whiteSpace: "wrap",
+                  marginBottom: 10,
+                  width: "100%",
+                  color: "gray",
+                  fontWeight: 400,
+                }}
+              />
+            </Tooltip>
           </Col>
         </Row>
 
