@@ -1,19 +1,29 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "antd";
-import { useAuth } from "../context/AuthContext";
 import Home from "../components/Home";
-
 import UserModal from "../components/UserModal";
+import PostService from "../service/PostService";
 
 const HomePage = () => {
-  const { logout } = useAuth();
-
   const [openModal, setOpenModal] = useState(false);
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    PostService
+      .getAllpost()
+      .then((response) => {
+        setPosts(response.data);
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
+  }, []);
+
+
 
   return (
     <>
-      
-      <Home/>
+      <Home posts={posts}/>
       <Button onClick={() => setOpenModal(true)}></Button>
       <UserModal isModalOpen={openModal} onClose={() => setOpenModal(false)} />
     </>
