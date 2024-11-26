@@ -4,12 +4,15 @@ import { Form, Input, Button, message, Spin } from "antd";
 import { LockOutlined, UserOutlined, MailOutlined } from "@ant-design/icons";
 import { BsFillExclamationCircleFill, BsCheckCircleFill } from "react-icons/bs";
 import UserService from "../service/UserService";
+import { useTheme } from "../context/ThemeContext";
 
 import "../styles/SignupPage.css";
 
 const SignupPage = () => {
-  const [form] = Form.useForm();
+  const { darkMode } = useTheme();
   const navigate = useNavigate();
+
+  const [form] = Form.useForm();
   const [image, setImage] = useState("");
 
   const [usernameIsLoading, setUsernameIsLoading] = useState(false);
@@ -139,7 +142,7 @@ const SignupPage = () => {
     try {
       const requestData = {
         ...values,
-        imageUrl: image,
+        imageUrl: image ?? "https://www.svgrepo.com/show/524211/user.svg",
       };
       console.log(requestData);
 
@@ -163,7 +166,11 @@ const SignupPage = () => {
     <>
       <div className="container-signup">
         <div className="main-signup">
-          <h3 style={{ textAlign: "center" }}>Create an account</h3>
+          <h3
+            style={{ textAlign: "center", color: darkMode ? "white" : "black" }}
+          >
+            Create an account
+          </h3>
 
           <div
             style={{
@@ -178,18 +185,18 @@ const SignupPage = () => {
                 <img
                   src={image}
                   alt="avatar"
-                  style={{ height: 100, width: 100, borderRadius: "50%" }}
+                  style={{ height: 90, width: 90, borderRadius: "50%" }}
                 />
               ) : (
                 <img
-                  src="https://www.svgrepo.com/show/420323/avatar-avocado-food.svg"
+                  src="https://www.svgrepo.com/show/524211/user.svg"
                   alt="placeholder"
-                  style={{ height: 100, width: 100 }}
+                  style={{ height: 90, width: 90, borderRadius: "50%" }}
                 />
               )}
             </div>
 
-            <div>
+            <div style={{ marginTop: 15 }}>
               <Form
                 name="signup"
                 initialValues={{
@@ -208,7 +215,7 @@ const SignupPage = () => {
                       message: "Name must be at least 3 characters long.",
                     },
                     {
-                      pattern: /^[A-Za-z]+$/,
+                      pattern: /^[A-Za-z\s]+$/,
                       message: "Name must only contain letters.",
                     },
                   ]}
@@ -251,18 +258,19 @@ const SignupPage = () => {
           </div>
 
           {/* upload file */}
-          <input
-            type="file"
-            accept='image/*'
-            onChange={handleImageUpload}
-            style={{
-              whiteSpace: "wrap",
-              marginBottom: 10,
-              width: "100%",
-              color: "gray",
-              fontWeight: 400,
-            }}
-          />
+          <div style={{ marginTop: -10, marginBottom: 10 }}>
+            <input
+              type="file"
+              onChange={handleImageUpload}
+              style={{
+                whiteSpace: "wrap",
+                marginBottom: 10,
+                width: "100%",
+                color: darkMode ? "#333" : "#fff",
+                fontWeight: 400,
+              }}
+            />
+          </div>
 
           <div>
             <Form
@@ -278,7 +286,7 @@ const SignupPage = () => {
                 name="email"
                 rules={[
                   { required: true, message: "Please input an email." },
-                  { type: "email", message: "Please enter a valid email." },
+                  { type: "email", message: "Please input a valid email." },
                 ]}
               >
                 <Input
@@ -300,7 +308,9 @@ const SignupPage = () => {
 
               <Form.Item
                 name="password"
-                rules={[{ required: true, message: "Please enter password." }]}
+                rules={[
+                  { required: true, message: "Please enter your password." },
+                ]}
               >
                 <Input.Password
                   className="signup-input"
@@ -324,8 +334,19 @@ const SignupPage = () => {
           </div>
 
           <div style={{ marginTop: -12 }}>
-            <h6 style={{ textAlign: "center" }}>
-              Already have an account? <Link to="/login">Login</Link>
+            <h6
+              style={{
+                textAlign: "center",
+                color: darkMode ? "lightgray" : "black",
+              }}
+            >
+              Already have an account?{" "}
+              <Link
+                to="/login"
+                style={{ color: darkMode ? "lightgray" : "violet" }}
+              >
+                Login
+              </Link>
             </h6>
           </div>
         </div>
