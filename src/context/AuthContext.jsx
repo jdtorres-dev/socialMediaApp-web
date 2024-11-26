@@ -47,8 +47,8 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("id", decoded.sub);
       localStorage.setItem("username", decoded.username);
-      localStorage.setItem("name", decoded.name);
-      localStorage.setItem("email", decoded.email);
+      // localStorage.setItem("name", decoded.name);
+      // localStorage.setItem("email", decoded.email);
 
       setCurrentUser({
         id: decoded.id,
@@ -59,7 +59,7 @@ export const AuthProvider = ({ children }) => {
 
       navigate("/home");
 
-      message.success("Access Granted");
+      message.success("You have successfully logged in!");
     } catch (error) {
       console.log("Error", error);
 

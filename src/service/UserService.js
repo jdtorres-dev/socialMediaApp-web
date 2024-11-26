@@ -21,6 +21,10 @@ class UserService {
     return http.get("/user/check-email", { params: { email } });
   }
 
+  getUserById(id) {
+    return http.get("/user/id", { params: { id }, ...this.getAxiosConfig() });
+  }
+
   createUser(user) {
     return http.post("/signup", user);
   }

@@ -1,12 +1,14 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "antd";
-import { BsEmojiTear } from "react-icons/bs";
+import { useTheme } from "../context/ThemeContext";
 
 import "../styles/NotFoundPage.css";
 
 const NotFoundPage = () => {
   const navigate = useNavigate();
+  const { darkMode } = useTheme();
+
   return (
     <>
       <div className="container-login">
@@ -16,10 +18,18 @@ const NotFoundPage = () => {
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
+            color: darkMode ? "white" : "black",
+            marginTop: -100,
           }}
         >
-          <div style={{ fontSize: 70 }}>
-            4<BsEmojiTear style={{ paddingTop: 10 }} />4
+          <div style={{ fontSize: 90 }}>
+            4
+            <img
+              src="https://www.svgrepo.com/show/54422/crying.svg"
+              alt="not-found"
+              style={{ height: 80, width: 80, paddingTop: 100 }}
+            />
+            4
           </div>
           <div
             style={{ marginTop: -10, fontWeight: "bold", textAlign: "center" }}
@@ -40,19 +50,16 @@ const NotFoundPage = () => {
             removed, name changed or is temporary unavailable
           </div>
           <Button
-            type="default"
+            type="primary"
             style={{
               marginTop: 30,
-              // color: "white",
-              // backgroundColor: "orange",
               borderRadius: 15,
             }}
             onClick={() => {
-              localStorage.clear();
-              navigate("/login");
+              navigate(-3);
             }}
           >
-            Go to Login Page
+            Go back
           </Button>
         </div>
       </div>

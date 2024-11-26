@@ -1,14 +1,17 @@
-import React from 'react'
+import React from "react";
 import { Link } from "react-router-dom";
 import { Form, Input, Button } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { MdWavingHand } from "react-icons/md";
+
 import { useAuth } from "../context/AuthContext";
+import { useTheme } from "../context/ThemeContext";
 
 import "../styles/LoginPage.css";
 
 const LoginPage = () => {
   const { login } = useAuth();
+  const { darkMode } = useTheme();
 
   const onFinish = async (values) => {
     await login(values);
@@ -22,7 +25,9 @@ const LoginPage = () => {
     <>
       <div className="container-login">
         <div className="main-login">
-          <h3 style={{ textAlign: "center" }}>
+          <h3
+            style={{ textAlign: "center", color: darkMode ? "white" : "black" }}
+          >
             Hi, Welcome Back!{" "}
             <MdWavingHand style={{ paddingLeft: "10px", color: "#E6BF00" }} />
           </h3>
@@ -87,8 +92,19 @@ const LoginPage = () => {
           </Form>
 
           <div style={{ marginTop: -12 }}>
-            <h6 style={{ textAlign: "center" }}>
-              Don't have an account? <Link to="/signup">Sign Up</Link>
+            <h6
+              style={{
+                textAlign: "center",
+                color: darkMode ? "lightgray" : "black",
+              }}
+            >
+              Don't have an account?{" "}
+              <Link
+                to="/signup"
+                style={{ color: darkMode ? "lightgray" : "violet" }}
+              >
+                Sign Up
+              </Link>
             </h6>
           </div>
         </div>
