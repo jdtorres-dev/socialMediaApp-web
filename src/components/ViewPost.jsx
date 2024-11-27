@@ -3,11 +3,14 @@ import { useParams } from 'react-router-dom';
 import PostService from '../service/PostService';
 import { Avatar, Card, Image, Typography, Spin } from 'antd';
 import AddComment from './AddComment';
+import { useTheme } from "../context/ThemeContext";
 
 const ViewPost = () => {
   const [post, setPost] = useState(null);
   const params = useParams();
   const postId = +params.id;
+  const { darkMode } = useTheme();
+
 
   useEffect(() => {
     PostService.getPostById(postId).then((response) => {
@@ -32,12 +35,15 @@ const ViewPost = () => {
         key={post.id}
         style={{
           marginBottom: '20px',
-          //border: '1px solid #333',
+          border: '1px',
           borderRadius: '8px',
           boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+          backgroundColor: darkMode ? "#3b3b3b" : "White"
         }}
         title={
-          <Typography level={4}>
+          <Typography level={4} style={{
+            color: darkMode ? "white" : "black"
+          }}>
             Post by @{post.user ? post.user.username : 'Unknown'}
           </Typography>
         }
@@ -48,12 +54,14 @@ const ViewPost = () => {
         }
       >
         {/* Post Created Date */}
-        <Typography type="secondary" style={{ fontSize: '0.6rem', textAlign: 'right' }}>
+        <Typography type="secondary" style={{ fontSize: '0.6rem', textAlign: 'right', color: darkMode ? "white" : "black"}}>
           {post.createdDate ? new Date(post.createdDate).toLocaleString() : 'No date available'}
         </Typography>
 
         {/* Post Body */}
-        <Typography>{post.body}</Typography>
+        <Typography style={{
+            color: darkMode ? "white" : "black"
+          }}>{post.body}</Typography>
 
         {/* Post Image */}
         {post.imageUrl && (
