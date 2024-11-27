@@ -26,7 +26,11 @@ class PostService{
 
     createComment(comment){
       return http.post("/post/createComment", comment);
-  }
+    }
+
+    getCommnetsByPostId(id){
+      return http.get(`/post/getCommentsByPostId/${id}`, this.getAxiosConfig());
+    }
 
 }
 

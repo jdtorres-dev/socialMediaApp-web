@@ -1,13 +1,43 @@
 import React, { useEffect, useState } from 'react';
 import { Form, Input, Button, Upload, message, Row, Col, Tooltip, Modal } from 'antd';
-import { PictureOutlined } from '@ant-design/icons';
 import PostService from '../service/PostService';
 import { useAuth } from "../context/AuthContext";
+import { useTheme } from "../context/ThemeContext";
+import PostCards from './PostCards';
+
 const AddPost = () => {
   const [form] = Form.useForm();
   const [imageUrl, setImageUrl] = useState("");
 
   const { currentUser } = useAuth();
+  const { darkMode } = useTheme();
+  const [posts, setPosts] = useState([]);
+  const [postAdded, setPostAdded] = useState(false);
+
+  useEffect(() => {
+    PostService.getAllpost()
+      .then((response) => {
+        setPosts(response.data);
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
+  }, []);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const fetchedPosts = await PostService.getAllpost();  
+        setPosts(fetchedPosts.data);
+      } catch (error) {
+        console.error("Error fetching posts:", error);
+        message.error("Error loading posts.");
+      }
+    };
+
+    fetchPosts(); 
+
+  }, [postAdded]);
 
   /*const beforeUpload = (file) => {
    const allowedTypes = [
@@ -110,6 +140,10 @@ const AddPost = () => {
       console.log(requestData);
 
       await PostService.createPost(requestData);
+
+      setPostAdded((prev) => !prev);
+      
+
       message.success(
         "Post successfully uploaded!"
       );
@@ -126,7 +160,8 @@ const AddPost = () => {
   };
 
   return (
-    <div style={{ maxWidth: 550, margin: '0 auto', padding: '15px', border: '1px solid #e0e0e0', borderRadius: '8px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', backgroundColor: 'white' }}>
+    <>
+    <div style={{ maxWidth: 550, margin: '0 auto', padding: '15px', borderRadius: '8px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)'}}>
       <Form
         form={form}
         name="add_post"
@@ -138,14 +173,16 @@ const AddPost = () => {
       >
         <Row gutter={24}>
           <Col span={19}>
+             <label style={{color: darkMode ? "White" : "Black"}}>
+              What's on your mind?
+            </label>
             <Form.Item
-              label="What's on your mind?"
               name="body"
               rules={[{ required: true, message: 'Please input your post!' }]}
             >
               <Input
                 placeholder="What's on your mind?"
-                style={{ borderRadius: '8px', padding: '10px', width: '100%' }}
+                style={{ borderRadius: '8px', padding: '10px', width: '100%'}}
               />
             </Form.Item>
           </Col>
@@ -189,6 +226,8 @@ const AddPost = () => {
         </Form.Item>
       </Form>
     </div>
+    <PostCards posts={posts}/>
+    </>
   );
 };
 

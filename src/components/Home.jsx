@@ -5,13 +5,12 @@ import { Col, Layout, Row } from 'antd';
 import { Content } from 'antd/es/layout/layout';
 import PostCards from './PostCards';
 
-const Home = ({posts}) => {
+const Home = () => {
   return (
     <>
     <Navbar />
     <div style={{ marginTop: '20px' }}>
       <AddPost />
-      <PostCards posts={posts}/>
     </div>
   </>
   );
