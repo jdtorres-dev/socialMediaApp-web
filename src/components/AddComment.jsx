@@ -40,6 +40,18 @@ const AddComment = ({ postDetails }) => {
 
   }, [commentAdded]);
 
+  const deleteCommentById = async (id) => {
+    try {
+        console.log(id)
+        await PostService.deleteCommentById(id);
+        message.success("Comment deleted successfully");
+        setCommentAdded((prev) => !prev);
+    } catch (error) {
+        console.error("Error deleting comment", error);
+        message.error("Error deleting comment. Please try again.");
+    }
+};
+
   const handleSubmit = async (values) => {
     console.log('Comment Values:', values);
     try {
@@ -98,7 +110,7 @@ const AddComment = ({ postDetails }) => {
         </Row>
       </Form>
 
-      <ViewAllCommentsPerPost comments={comments}/>
+      <ViewAllCommentsPerPost comments={comments} onDeleteComment={deleteCommentById}/>
     </div>
   );
 };
