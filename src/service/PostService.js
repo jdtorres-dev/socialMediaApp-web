@@ -32,6 +32,12 @@ class PostService{
       return http.get(`/post/getCommentsByPostId/${id}`, this.getAxiosConfig());
     }
 
+    deleteCommentById(id) {
+      return http.put("/post/deleteComment",null, {
+          params: { commentId: id }
+      });
+  }
+
 }
 
 export default new PostService();
