@@ -37,6 +37,19 @@ class PostService{
           params: { commentId: id }
       });
   }
+    updateComment(id, cBody) {
+      return http.put("/post/updateComment",null,{
+        params:{ commentId: id,
+          commentBody: cBody}
+      });
+  }
+
+  getCommentById(commentId){
+    return http.get("/post/getCommentById", {
+      params: {id: commentId}
+    });
+  }
+
 
 }
 
