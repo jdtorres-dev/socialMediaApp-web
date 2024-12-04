@@ -24,10 +24,7 @@ const UpdateComment = ({comment, onUpdate, onClose}) => {
                 const updatedCommentBody = values.commentBody;
                 const commentId = comment.id;
                 onUpdate(commentId, updatedCommentBody);  // Call onUpdate with the updated comment
-                onClose(); // Close the modal
-            },
-            onCancel: () => {
-                // Optionally handle cancel action (do nothing or display a message)
+                onClose(); 
             }
         });
     };

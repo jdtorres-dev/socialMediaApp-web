@@ -4,6 +4,7 @@ import PostService from '../service/PostService';
 import { Avatar, Card, Image, Typography, Spin } from 'antd';
 import AddComment from './AddComment';
 import { useTheme } from "../context/ThemeContext";
+import LikeUnlikePost from './LikeUnlikePost';
 
 const ViewPost = () => {
   const [post, setPost] = useState(null);
@@ -78,6 +79,7 @@ const ViewPost = () => {
             preview={true}
           />
         )}
+        <LikeUnlikePost post={post}></LikeUnlikePost>
       </Card>
       <AddComment postDetails={post}></AddComment>
     </div>
