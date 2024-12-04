@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Input, Button, Upload, message, Row, Col, Tooltip, Modal } from 'antd';
+import { Form, Input, Button, Upload, message, Row, Col, Tooltip, Modal, Spin } from 'antd';
 import PostService from '../service/PostService';
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
@@ -159,6 +159,14 @@ const AddPost = () => {
     }
   };
 
+  if  (posts === null || posts.length === 0) {
+    return (
+      <div style={{ textAlign: 'center', marginTop: '20px' }}>
+        <Spin size="large" />
+        <p>Loading posts...</p>
+      </div>
+    );
+  }
   return (
     <>
     <div style={{ maxWidth: 550, margin: '0 auto', padding: '15px', borderRadius: '8px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)'}}>

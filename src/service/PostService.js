@@ -50,6 +50,23 @@ class PostService{
     });
   }
 
+  likePost(like){
+    return http.post("/post/likePost", like);
+  }
+
+  unLikePost(likeId){
+    return http.put("/post/unlikePost", null,{
+      params: {id: likeId}
+    });
+  }
+
+  getLikeUnlikePost(postId, userId){
+    return http.get("/post/getLikeUnlikePost", {
+      params: {postId: postId, userId: userId}
+    });
+  }
+  
+
 
 }
 

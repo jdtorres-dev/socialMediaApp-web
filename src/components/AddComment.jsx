@@ -18,7 +18,6 @@ const AddComment = ({ postDetails }) => {
     PostService.getCommnetsByPostId(postId)
       .then((response) => {
         setComments(response.data);
-        console.log(comments)
       })
       .catch((error) => {
         console.log("error", error);
