@@ -119,8 +119,6 @@ const Profile = () => {
     }
   };
 
-  console.log(posts);
-
   return (
     <>
       <div

@@ -20,7 +20,7 @@ const ViewPostPage = () => {
       .catch((error) => {
         console.error("Error fetching post:", error);
       });
-  }, [postId]);
+  }, [postId, post]);
 
   useEffect(() => {
     const fetchPosts = async () => {
