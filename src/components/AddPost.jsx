@@ -169,34 +169,53 @@ const AddPost = () => {
   }
   return (
     <>
-    <div style={{ maxWidth: 550, margin: '0 auto', padding: '15px', borderRadius: '8px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)'}}>
-      <Form
-        form={form}
-        name="add_post"
-        onFinish={showConfirm}
-        initialValues={{
-          remember: true
+      <div
+        style={{
+          maxWidth: 550,
+          margin: "0 auto",
+          padding: "15px",
+          borderRadius: "8px",
+          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
         }}
-        layout="vertical"
       >
-        <Row gutter={24}>
-          <Col span={19}>
-             <label style={{color: darkMode ? "White" : "Black"}}>
-              What's on your mind?
-            </label>
-            <Form.Item
-              name="body"
-              rules={[{ required: true, message: 'Please input your post!' }]}
-            >
-              <Input
-                placeholder="What's on your mind?"
-                style={{ borderRadius: '8px', padding: '10px', width: '100%'}}
-              />
-            </Form.Item>
-          </Col>
+        <Form
+          form={form}
+          name="add_post"
+          onFinish={showConfirm}
+          initialValues={{
+            remember: true,
+          }}
+          layout="vertical"
+        >
+          <Row gutter={24}>
+            <Col span={19}>
+              <label style={{ color: darkMode ? "White" : "Black" }}>
+                What's on your mind?
+              </label>
+              <Form.Item
+                name="body"
+                rules={[{ required: true, message: "Please input your post!" }]}
+              >
+                <Input
+                  placeholder="What's on your mind?"
+                  style={{
+                    borderRadius: "8px",
+                    padding: "10px",
+                    width: "100%",
+                  }}
+                />
+              </Form.Item>
+            </Col>
 
-          <Col span={5} style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 30 }}>
-            {/*<Tooltip title="Upload an image"> 
+            <Col
+              span={5}
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                marginTop: 30,
+              }}
+            >
+              {/*<Tooltip title="Upload an image"> 
                 <Upload
                   name="image"
                   listType="picture"
@@ -208,33 +227,38 @@ const AddPost = () => {
                   <Button size="large" icon={<PictureOutlined />} />
                 </Upload>
               </Tooltip>*/}
-            <Tooltip title="Upload an image"> 
-              <input
-                name='image'
-                accept='image/*'
-                type="file"
-                onChange={handleImageUpload}
-                style={{
-                  whiteSpace: "wrap",
-                  marginBottom: 10,
-                  width: "100%",
-                  color: "gray",
-                  fontWeight: 400,
-                }}
-              />
-            </Tooltip>
-          </Col>
-        </Row>
+              <Tooltip title="Upload an image">
+                <input
+                  name="image"
+                  accept="image/*"
+                  type="file"
+                  onChange={handleImageUpload}
+                  style={{
+                    whiteSpace: "wrap",
+                    marginBottom: 10,
+                    width: "100%",
+                    color: "gray",
+                    fontWeight: 400,
+                  }}
+                />
+              </Tooltip>
+            </Col>
+          </Row>
 
-        {/* Submit Button */}
-        <Form.Item>
-          <Button type="primary" htmlType="submit" block style={{ borderRadius: '8px' }}>
-            Post
-          </Button>
-        </Form.Item>
-      </Form>
-    </div>
-    <PostCards posts={posts}/>
+          {/* Submit Button */}
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              block
+              style={{ borderRadius: "8px" }}
+            >
+              Post
+            </Button>
+          </Form.Item>
+        </Form>
+      </div>
+      <PostCards posts={posts} setPosts={setPosts} />
     </>
   );
 };
