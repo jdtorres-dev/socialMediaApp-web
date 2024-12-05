@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { Form, Input, message, Modal, Spin, Divider } from "antd";
+import { Form, Input, message, Modal, Spin, Divider, Tooltip } from "antd";
 import { LockOutlined, UserOutlined, MailOutlined } from "@ant-design/icons";
 import { BsFillExclamationCircleFill, BsCheckCircleFill } from "react-icons/bs";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "../context/AuthContext";
 import UserService from "../service/UserService";
 import { useGetUserById } from "../queries/UserQueries";
+import { useTheme } from "../context/ThemeContext";
+
+import "../styles/Modal.css";
 
 const UserModal = ({ isModalOpen, onClose }) => {
   const { currentUser } = useAuth();
+  const { darkMode } = useTheme();
   const { data } = useGetUserById(currentUser.id);
 
   const [form] = Form.useForm();
@@ -27,10 +31,10 @@ const UserModal = ({ isModalOpen, onClose }) => {
   useEffect(() => {
     if (isModalOpen) {
       form.setFieldsValue({
-        name: data.name,
-        username: data.username,
-        email: data.email,
-        imageUrl: data.imageUrl,
+        name: data?.name,
+        username: data?.username,
+        email: data?.email,
+        imageUrl: data?.imageUrl,
       });
     }
   }, [isModalOpen, form, data]);
@@ -169,7 +173,7 @@ const UserModal = ({ isModalOpen, onClose }) => {
   const showConfirmUpdate = () => {
     Modal.confirm({
       title: "Update Profile",
-      content: "Are you sure you want to update your profile?",
+      content: "Are you sure you want to update your information?",
       onOk: async () => {
         try {
           const formValues = form.getFieldsValue();
@@ -186,8 +190,6 @@ const UserModal = ({ isModalOpen, onClose }) => {
 
           if (formValues.password) {
             updatedUser.password = formValues.password;
-          } else {
-            updatedUser.password = undefined;
           }
 
           await UserService.updateUser(localStorage.getItem("id"), updatedUser);
@@ -209,6 +211,7 @@ const UserModal = ({ isModalOpen, onClose }) => {
 
   return (
     <Modal
+      className={darkMode ? "ant-modal-dark" : ""}
       open={isModalOpen}
       onCancel={onClose}
       onOk={showConfirmUpdate}
@@ -286,7 +289,11 @@ const UserModal = ({ isModalOpen, onClose }) => {
                 { required: true, message: "Please input your name." },
                 {
                   min: 3,
-                  message: "Name must be at least 3 characters long.",
+                  message: "Name must be at least 3 characters.",
+                },
+                {
+                  max: 50,
+                  message: "Name must be less than 50 characters long.",
                 },
                 {
                   pattern: /^[A-Za-z\s]+$/,
@@ -311,8 +318,17 @@ const UserModal = ({ isModalOpen, onClose }) => {
               rules={[
                 { required: true, message: "Please input a username." },
                 {
-                  min: 3,
-                  message: "Username must be at least 3 characters long.",
+                  min: 5,
+                  message: "Username must be at least 5 characters.",
+                },
+                {
+                  max: 50,
+                  message: "Username must be less than 50 characters.",
+                },
+                {
+                  pattern: /^[A-Za-z0-9._-]+$/,
+                  message:
+                    "Username can only contain letters, numbers, and special characters (-, _, .).",
                 },
               ]}
             >
@@ -338,16 +354,18 @@ const UserModal = ({ isModalOpen, onClose }) => {
 
       {/* upload file */}
       <div style={{ marginTop: -28 }}>
-        <input
-          type="file"
-          onChange={handleImageUpload}
-          style={{
-            whiteSpace: "wrap",
-            marginBottom: 10,
-            width: "100%",
-            color: "#fff",
-          }}
-        />
+        <Tooltip title="Upload an image" placement="topLeft">
+          <input
+            type="file"
+            onChange={handleImageUpload}
+            style={{
+              whiteSpace: "wrap",
+              marginBottom: 10,
+              width: "100%",
+              color: darkMode ? "#333" : "white",
+            }}
+          />
+        </Tooltip>
       </div>
 
       <div>
@@ -393,17 +411,34 @@ const UserModal = ({ isModalOpen, onClose }) => {
           >
             Password
           </label>
-          <Form.Item name="password">
+          <Form.Item
+            name="password"
+            rules={[
+              {
+                pattern:
+                  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/,
+                message:
+                  "Password must be at least 8 characters long and contain uppercase, lowercase, a number, and a special character.",
+              },
+            ]}
+          >
             <Input.Password
               className="signup-input"
               prefix={<LockOutlined style={{ fontSize: 13 }} />}
               type="password"
-              placeholder="Enter Your Password"
+              placeholder="Enter Your New Password (Leave empty if you don't want to change)"
             />
           </Form.Item>
         </Form>
       </div>
-      <Divider style={{ color: "black", marginTop: 0, marginBottom: 15 }} />
+      <Divider
+        style={{
+          borderColor: darkMode ? "white" : "gray",
+          marginTop: 0,
+          marginBottom: 15,
+          height: 5,
+        }}
+      />
     </Modal>
   );
 };

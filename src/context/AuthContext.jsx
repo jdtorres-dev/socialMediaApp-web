@@ -7,7 +7,6 @@ import { message } from "antd";
 const AuthContext = createContext(undefined);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
   const [currentUser, setCurrentUser] = useState({
     id: null,
     name: "",
@@ -17,57 +16,58 @@ export const AuthProvider = ({ children }) => {
 
   const navigate = useNavigate();
 
+  // Check token when app loads (e.g. on refresh)
   useEffect(() => {
-    const checkToken = () => {
-      const accessToken = localStorage.getItem("accessToken");
+    const accessToken = localStorage.getItem("accessToken");
+    if (accessToken) {
+      const decoded = jwtDecode(accessToken);
+      console.log("Decoded Token on Page Load: ", decoded); // Debug log
 
-      if (accessToken) {
-        const decoded = jwtDecode(accessToken);
+      setCurrentUser({
+        id: decoded.sub,
+        name: decoded.name,
+        username: decoded.username,
+        email: decoded.email,
+      });
+    }
+  }, []);
 
-        setCurrentUser({
-          id: decoded.sub,
-          username: decoded.username,
-          name: decoded.name,
-          email: decoded.email,
-        });
-      } else {
-        localStorage.clear();
-      }
-    };
-
-    checkToken();
-  }, [navigate]);
-
+  // Login method (stores token in localStorage and redirects to /home)
   const login = async (login) => {
     try {
       const { accessToken } = await AuthService.login(login);
+      console.log("Access Token:", accessToken); // Debug log
 
       const decoded = jwtDecode(accessToken);
 
+      // Store token and user info
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("id", decoded.sub);
-      localStorage.setItem("username", decoded.username);
+      // localStorage.setItem("username", decoded.username);
       // localStorage.setItem("name", decoded.name);
       // localStorage.setItem("email", decoded.email);
 
+      // Set user state
       setCurrentUser({
-        id: decoded.id,
+        id: decoded.sub,
         name: decoded.name,
         username: decoded.username,
         email: decoded.email,
       });
 
+      // Debug log before navigation
+      console.log("Navigating to /home...");
+
+      // Navigate to /home
       navigate("/home");
 
       message.success("You have successfully logged in!");
     } catch (error) {
-      console.log("Error", error);
+      console.log("Error during login:", error);
 
       if (error.response && error.response.status < 500) {
         localStorage.clear();
-        message.error(
-          "Oops! It seems that your login details are incorrect. Please check your username and password."
-        );
+        message.error("Invalid login details. Please try again.");
         navigate("/login");
       }
     }
@@ -75,7 +75,6 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     localStorage.clear();
-    setUser(null);
     setCurrentUser({
       id: null,
       name: "",
@@ -86,7 +85,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, currentUser, login, logout }}>
+    <AuthContext.Provider value={{ currentUser, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
@@ -94,10 +93,8 @@ export const AuthProvider = ({ children }) => {
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-
   if (context === undefined) {
     throw new Error("useAuth must be used within an AuthProvider");
   }
-
   return context;
 };

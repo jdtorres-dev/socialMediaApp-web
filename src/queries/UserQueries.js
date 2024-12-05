@@ -9,6 +9,5 @@ export const useGetUserById = (id) => {
       return data;
     },
     enabled: !!id,
-    retry: false,
   });
 };
