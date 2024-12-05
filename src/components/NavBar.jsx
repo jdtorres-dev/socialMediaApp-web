@@ -95,7 +95,9 @@ const Navbar = () => {
                 <Menu.Item key="1" onClick={() => Navigate("/home")}>
                   Home
                 </Menu.Item>
-                <Menu.Item key="2">Profile</Menu.Item>
+                <Menu.Item key="2" onClick={() => Navigate("/profile")}>
+                  Profile
+                </Menu.Item>
 
                 <Menu.Item
                   key="3"

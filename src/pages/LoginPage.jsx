@@ -14,7 +14,14 @@ const LoginPage = () => {
   const { darkMode } = useTheme();
 
   const onFinish = async (values) => {
-    await login(values);
+    const { username, password } = values;
+
+    const loginField = {
+      username: username,
+      password: password,
+    };
+
+    await login(loginField);
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -45,10 +52,9 @@ const LoginPage = () => {
             <Form.Item
               name="username"
               rules={[
-                { required: true, message: "Please input your username." },
                 {
-                  min: 3,
-                  message: "Username must be at least 3 characters long.",
+                  required: true,
+                  message: "Please input your username or email.",
                 },
               ]}
             >

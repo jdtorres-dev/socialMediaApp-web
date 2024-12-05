@@ -142,7 +142,7 @@ const SignupPage = () => {
     try {
       const requestData = {
         ...values,
-        imageUrl: image ?? "https://www.svgrepo.com/show/524211/user.svg",
+        imageUrl: image || "https://www.svgrepo.com/show/524211/user.svg",
       };
       console.log(requestData);
 
@@ -180,7 +180,13 @@ const SignupPage = () => {
               gap: 20,
             }}
           >
-            <div style={{ marginTop: -10 }}>
+            <div
+              style={{
+                marginTop: -10,
+                backgroundColor: darkMode ? "#fff" : null,
+                borderRadius: "50%",
+              }}
+            >
               {image ? (
                 <img
                   src={image}
@@ -191,7 +197,11 @@ const SignupPage = () => {
                 <img
                   src="https://www.svgrepo.com/show/524211/user.svg"
                   alt="placeholder"
-                  style={{ height: 90, width: 90, borderRadius: "50%" }}
+                  style={{
+                    height: 90,
+                    width: 90,
+                    borderRadius: "50%",
+                  }}
                 />
               )}
             </div>
@@ -212,7 +222,11 @@ const SignupPage = () => {
                     { required: true, message: "Please input your name." },
                     {
                       min: 3,
-                      message: "Name must be at least 3 characters long.",
+                      message: "Name must be at least 3 characters.",
+                    },
+                    {
+                      max: 50,
+                      message: "Name must be less than 50 characters long.",
                     },
                     {
                       pattern: /^[A-Za-z\s]+$/,
@@ -232,8 +246,17 @@ const SignupPage = () => {
                   rules={[
                     { required: true, message: "Please input a username." },
                     {
-                      min: 3,
-                      message: "Username must be at least 3 characters long.",
+                      min: 5,
+                      message: "Username must be at least 5 characters.",
+                    },
+                    {
+                      max: 50,
+                      message: "Username must be less than 50 characters.",
+                    },
+                    {
+                      pattern: /^[A-Za-z0-9._-]+$/,
+                      message:
+                        "Username can only contain letters, numbers, and special characters (-, _, .).",
                     },
                   ]}
                 >
@@ -310,6 +333,12 @@ const SignupPage = () => {
                 name="password"
                 rules={[
                   { required: true, message: "Please enter your password." },
+                  {
+                    pattern:
+                      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/,
+                    message:
+                      "Password must be at least 8 characters long and contain uppercase, lowercase, a number, and a special character.",
+                  },
                 ]}
               >
                 <Input.Password
