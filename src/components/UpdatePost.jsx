@@ -2,16 +2,18 @@ import React, { useEffect, useState } from "react";
 import {
   Avatar,
   Divider,
+  Image,
   Typography,
   Modal,
   Form,
   Input,
   message,
   Button,
-  Tooltip,
 } from "antd";
 import { useTheme } from "../context/ThemeContext";
 import PostService from "../service/PostService";
+import { CiImageOn } from "react-icons/ci";
+import { GoTrash } from "react-icons/go";
 
 import "../styles/Modal.css";
 
@@ -74,6 +76,7 @@ const UpdatePost = ({ onOpen, onClose, post, onPostUpdate }) => {
     Modal.confirm({
       title: "Update Post",
       content: "Are you sure you want to update your post?",
+      okText: "Update",
       onOk: async () => {
         try {
           const formValues = form.getFieldsValue();
@@ -121,7 +124,7 @@ const UpdatePost = ({ onOpen, onClose, post, onPostUpdate }) => {
           boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
         },
       }}
-      okText="Confirm"
+      okText="Update"
     >
       <div
         style={{
@@ -160,9 +163,75 @@ const UpdatePost = ({ onOpen, onClose, post, onPostUpdate }) => {
       </div>
 
       <br />
-      <div style={{ marginTop: -10, marginBottom: 10 }}>
-        What's on your mind?
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <div style={{ marginTop: -10, marginBottom: 10 }}>
+          What's on your mind?
+        </div>
+
+        {/* upload file */}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+          }}
+        >
+          <label
+            htmlFor="image-upload"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+              width: 30,
+              height: 25,
+              color: darkMode ? "#fff" : "gray",
+            }}
+          >
+            <CiImageOn style={{ fontSize: "25px", marginTop: -20 }} />
+          </label>
+          <input
+            id="image-upload"
+            type="file"
+            onChange={handleImageUpload}
+            style={{
+              display: "none",
+            }}
+          />
+
+          {image && (
+            <Button
+              type="secondary"
+              onClick={() => setImage("")}
+              style={{
+                width: 30,
+                height: 25,
+                padding: 0,
+                // border: "none",
+                // boxShadow: "none",
+                // backgroundColor: "transparent",
+                marginTop: -20,
+              }}
+              icon={
+                <GoTrash
+                  style={{
+                    fontSize: 20,
+                    color: "#FF7276",
+                  }}
+                />
+              }
+            />
+          )}
+        </div>
       </div>
+
       <div>
         <Form
           form={form}
@@ -197,7 +266,7 @@ const UpdatePost = ({ onOpen, onClose, post, onPostUpdate }) => {
               }}
             >
               <div>
-                <img
+                <Image
                   alt="example"
                   src={image}
                   style={{
@@ -209,43 +278,6 @@ const UpdatePost = ({ onOpen, onClose, post, onPostUpdate }) => {
               </div>
             </div>
           ) : null}
-
-          {/* upload file */}
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-              marginBottom: "10px",
-            }}
-          >
-            <Tooltip title="Upload an image" placement="topLeft">
-              <input
-                type="file"
-                onChange={handleImageUpload}
-                style={{
-                  whiteSpace: "wrap",
-                  width: "100%",
-                  color: darkMode ? "#333" : "white",
-                }}
-              />
-            </Tooltip>
-            {image && (
-              <Button
-                onClick={() => setImage("")}
-                style={{
-                  height: "22px",
-                  fontSize: "13px",
-                  backgroundColor: "lightgray",
-                  border: "1px solid black",
-                  borderRadius: "2px",
-                }}
-              >
-                Remove image
-              </Button>
-            )}
-          </div>
         </Form>
       </div>
       <Divider

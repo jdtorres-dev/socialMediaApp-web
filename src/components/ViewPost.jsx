@@ -189,9 +189,9 @@ const ViewPost = ({ setPost, post, setPosts, onPostUpdate }) => {
               preview={true}
             />
           )}
-          <LikeUnlikePost post={post}></LikeUnlikePost>
+          <LikeUnlikePost post={post} />
         </Card>
-        <AddComment postDetails={post}></AddComment>
+        <AddComment postDetails={post} />
       </div>
 
       {selectedPost && (

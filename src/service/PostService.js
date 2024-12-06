@@ -52,15 +52,33 @@ class PostService {
     return http.post("/post/likePost", like);
   }
 
+  likeComment(like) {
+    return http.post("/post/likeComment", like);
+  }
+
   unLikePost(likeId) {
     return http.put("/post/unlikePost", null, {
       params: { id: likeId },
     });
   }
 
+  unlikeComment(likeId) {
+    return http.put("/post/unlikeComment", null, {
+      params: { id: likeId },
+      ...this.getAxiosConfig(),
+    });
+  }
+
   getLikeUnlikePost(postId, userId) {
     return http.get("/post/getLikeUnlikePost", {
       params: { postId: postId, userId: userId },
+    });
+  }
+
+  getLikeUnlikeComment(commentId, userId) {
+    return http.get("/post/getLikeUnlikeComment", {
+      params: { commentId, userId },
+      ...this.getAxiosConfig(),
     });
   }
 

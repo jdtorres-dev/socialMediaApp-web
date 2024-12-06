@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Form, Input, Button, message, Row, Col, Tooltip, Modal } from "antd";
+import { Form, Input, Button, message, Avatar, Modal, Image, Spin } from "antd";
 import PostService from "../service/PostService";
 import PostCards from "./PostCards";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
+import { useGetUserById } from "../queries/UserQueries";
+import { CiImageOn } from "react-icons/ci";
+import { GoTrash } from "react-icons/go";
+
+const { TextArea } = Input;
 
 const Profile = () => {
   const [form] = Form.useForm();
@@ -14,19 +19,25 @@ const Profile = () => {
 
   const [posts, setPosts] = useState([]);
   const [postAdded, setPostAdded] = useState(false);
+  const { data: user } = useGetUserById(currentUser.id);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    setIsLoading(true);
     if (currentUser?.id) {
       PostService.getPostsByUserId(currentUser.id)
         .then((response) => {
+          setIsLoading(false);
           setPosts(response.data);
         })
         .catch((error) => {
+          setIsLoading(false);
           console.error("Error fetching posts:", error);
           message.error("Error loading posts.");
         });
     }
-  }, [currentUser]);
+  }, [currentUser, user]);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -81,10 +92,6 @@ const Profile = () => {
     }
   };
 
-  useEffect(() => {
-    // console.log("Final image URL:", imageUrl);
-  }, [imageUrl]);
-
   const showConfirm = (values) => {
     Modal.confirm({
       title: "Are you sure you want to add a post?",
@@ -97,15 +104,12 @@ const Profile = () => {
   };
 
   const handleSubmit = async (values) => {
-    console.log("Final image URL:", imageUrl);
-    console.log("Post Values:", values);
     try {
       const requestData = {
         ...values,
         imageUrl: imageUrl,
         user: currentUser,
       };
-      console.log(requestData);
 
       await PostService.createPost(requestData);
       setPostAdded((prev) => !prev);
@@ -123,94 +127,220 @@ const Profile = () => {
     <>
       <div
         style={{
-          maxWidth: 550,
+          display: "flex",
+          flexDirection: "row",
+          maxWidth: "470px",
           margin: "0 auto",
           padding: "15px",
           borderRadius: "8px",
           boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
         }}
       >
-        <Form
-          form={form}
-          name="add_post"
-          onFinish={showConfirm}
-          initialValues={{
-            remember: true,
+        {/* Avatar */}
+        <div style={{ width: "50px" }}>
+          <Avatar src={user?.imageUrl} style={{ height: 50, width: 50 }}>
+            {!user?.imageUrl && user?.username
+              ? user.username.charAt(0).toUpperCase()
+              : null}
+          </Avatar>
+        </div>
+
+        {/* Form */}
+        <div
+          style={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "start",
+            width: "100%",
+            paddingLeft: 10,
+            paddingRight: 15,
           }}
-          layout="vertical"
         >
-          <Row gutter={24}>
-            <Col span={24}>
-              <label style={{ color: darkMode ? "White" : "Black" }}>
-                What's on your mind?
-              </label>
+          {/* What's on your mind */}
+          <div
+            style={{
+              fontWeight: 400,
+              fontSize: 14,
+              alignContent: "center",
+              color: darkMode ? "lightgray" : "black",
+            }}
+          >
+            What's on your mind?
+          </div>
+
+          {/* Image Preview */}
+          {imageUrl && (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                overflow: "hidden",
+                width: "100%",
+                height: 280,
+                marginTop: -5,
+              }}
+            >
+              <Image
+                alt="preview"
+                src={imageUrl}
+                style={{
+                  width: 250,
+                  height: 250,
+                  objectFit: "cover",
+                }}
+              />
+            </div>
+          )}
+
+          {/* Text Area */}
+          <div
+            style={{
+              width: "100%",
+            }}
+          >
+            <Form
+              form={form}
+              name="add_post"
+              onFinish={showConfirm}
+              initialValues={{
+                remember: true,
+              }}
+            >
               <Form.Item
                 name="body"
                 rules={[{ required: true, message: "Please input your post!" }]}
               >
-                <Input
-                  placeholder="What's on your mind?"
+                <TextArea
+                  autoSize={{ minRows: 1, maxRows: 1 }}
                   style={{
-                    borderRadius: "8px",
-                    padding: "10px",
-                    width: "100%",
+                    backgroundColor: "transparent",
+                    color: darkMode ? "white" : "black",
+                    borderTop: "none",
+                    borderLeft: "none",
+                    borderRight: "none",
+                    borderRadius: 0,
+                    borderBottom: "1px solid lightgray",
+                    fontSize: "12px",
                   }}
                 />
               </Form.Item>
-            </Col>
-          </Row>
+            </Form>
+          </div>
 
-          {/* Submit Button */}
-          <Row gutter={24}>
-            <Col
-              span={19}
-              style={{
-                display: "flex",
-                justifyContent: "flex-end",
-                marginTop: 5,
-                color: "#fff",
-              }}
-            >
-              <Tooltip title="Upload an image" placement="topLeft">
-                <input
-                  name="image"
-                  accept="image/*"
-                  type="file"
-                  onChange={handleImageUpload}
-                  style={{
-                    whiteSpace: "wrap",
-                    marginBottom: 5,
-                    width: "100%",
-                    color: darkMode ? "#333" : "#fff",
-                    fontWeight: 400,
-                  }}
-                />
-              </Tooltip>
-            </Col>
-            <Col
-              span={5}
-              style={{
-                display: "flex",
-                justifyContent: "flex-end",
-                marginTop: 0,
-                marginBottom: -5,
-              }}
-            >
-              <Form.Item>
+          {/* Upload */}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              width: "100%",
+            }}
+          >
+            {/* Image Upload Button */}
+            <div>
+              <label
+                htmlFor="file-upload"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  cursor: "pointer",
+                  width: 30,
+                  height: 25,
+                  color: darkMode ? "#fff" : "gray",
+                }}
+              >
+                <CiImageOn style={{ fontSize: "25px", marginTop: -20 }} />
+              </label>
+              <input
+                id="file-upload"
+                type="file"
+                onChange={handleImageUpload}
+                style={{
+                  display: "none",
+                }}
+              />
+            </div>
+
+            {imageUrl !== "" && (
+              <div
+                style={{
+                  marginTop: -18,
+                  marginLeft: -0,
+                }}
+              >
                 <Button
-                  type="primary"
-                  htmlType="submit"
-                  block
-                  style={{ borderRadius: "8px" }}
-                >
-                  Post
-                </Button>
-              </Form.Item>
-            </Col>
-          </Row>
-        </Form>
+                  type="secondary"
+                  onClick={() => setImageUrl("")}
+                  style={{
+                    width: 30,
+                    height: 25,
+                    padding: 0,
+                    // border: "none",
+                    // boxShadow: "none",
+                    // backgroundColor: "transparent",
+                  }}
+                  icon={
+                    <GoTrash
+                      style={{
+                        fontSize: 20,
+                        color: "#FF7276",
+                      }}
+                    />
+                  }
+                />
+              </div>
+            )}
+
+            {/* Submit Button */}
+            <div style={{ marginLeft: "auto" }}>
+              <Form
+                form={form}
+                name="add_post"
+                onFinish={showConfirm}
+                initialValues={{
+                  remember: true,
+                }}
+              >
+                <Form.Item>
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    block
+                    style={{ borderRadius: "8px" }}
+                  >
+                    Post
+                  </Button>
+                </Form.Item>
+              </Form>
+            </div>
+          </div>
+        </div>
       </div>
-      <PostCards posts={posts} setPosts={setPosts} />
+
+      {/* Posts */}
+      {isLoading ? (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100px",
+          }}
+        >
+          <Spin size="large" />
+          <p
+            style={{ color: darkMode ? "white" : "black", marginLeft: "10px" }}
+          >
+            Loading posts...
+          </p>
+        </div>
+      ) : (
+        <PostCards posts={posts} setPosts={setPosts} />
+      )}
     </>
   );
 };
