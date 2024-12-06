@@ -13,10 +13,11 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
-import { DashOutlined } from "@ant-design/icons";
+import { PiDotsThreeBold } from "react-icons/pi";
 import PostService from "../service/PostService";
-
+import LikeUnlikePost from "./LikeUnlikePost";
 import UpdatePost from "./UpdatePost";
+import { IoEyeOutline } from "react-icons/io5";
 
 const PostCards = ({ posts, setPosts }) => {
   const { darkMode } = useTheme();
@@ -144,7 +145,12 @@ const PostCards = ({ posts, setPosts }) => {
                     overlay={settingsMenu(post.id, post)}
                     trigger={["click"]}
                   >
-                    <DashOutlined style={{ color: "Blue", fontSize: "18px" }} />
+                    <PiDotsThreeBold
+                      style={{
+                        color: darkMode ? "lightgray" : "blue",
+                        fontSize: "20px",
+                      }}
+                    />
                   </Dropdown>
                 )}
               </div>
@@ -189,15 +195,40 @@ const PostCards = ({ posts, setPosts }) => {
               />
             )}
 
-            {/* View Post Button */}
-            <Button
-              type="secondary"
-              style={{ marginTop: "10px", color: darkMode ? "white" : "black" }}
-              block
-              onClick={() => navigate(`/post/${post.id}`)}
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-evenly",
+              }}
             >
-              View Post
-            </Button>
+              <div>
+                <LikeUnlikePost post={post} />
+              </div>
+
+              <div
+                style={{
+                  borderLeft: "1px solid lightgray",
+                  height: 20,
+                  marginTop: 15,
+                }}
+              ></div>
+
+              <div>
+                {/* View Post Button */}
+                <Button
+                  type="secondary"
+                  style={{
+                    marginTop: "10px",
+                    color: darkMode ? "white" : "black",
+                  }}
+                  block
+                  onClick={() => navigate(`/post/${post.id}`)}
+                  icon={<IoEyeOutline style={{ fontSize: 20 }} />}
+                />
+              </div>
+            </div>
           </Card>
         ))}
       </div>

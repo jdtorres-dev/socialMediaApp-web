@@ -2,7 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Form, Input, Button } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import { MdWavingHand } from "react-icons/md";
 
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
@@ -32,12 +31,59 @@ const LoginPage = () => {
     <>
       <div className="container-login">
         <div className="main-login">
-          <h3
-            style={{ textAlign: "center", color: darkMode ? "white" : "black" }}
-          >
-            Hi, Welcome Back!{" "}
-            <MdWavingHand style={{ paddingLeft: "10px", color: "#E6BF00" }} />
-          </h3>
+          <div>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginTop: -25,
+                marginLeft: -25,
+                gap: 15,
+              }}
+            >
+              <div>
+                <h2
+                  className="title"
+                  style={{
+                    color: darkMode ? "white" : "black",
+                    padding: 0,
+                    fontSize: 30,
+                  }}
+                >
+                  Login
+                </h2>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "end",
+                  height: 60,
+                }}
+              >
+                <div
+                  style={{
+                    textAlign: "end",
+                    color: darkMode ? "lightgray" : "gray",
+                    fontSize: 11,
+                  }}
+                >
+                  No account?{" "}
+                </div>
+                <div style={{ fontSize: 12 }}>
+                  <Link
+                    to="/signup"
+                    style={{
+                      color: darkMode ? "lightgray" : "violet",
+                    }}
+                  >
+                    Sign Up
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
           <Form
             name="login"
             initialValues={{
@@ -45,9 +91,10 @@ const LoginPage = () => {
             }}
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
+            style={{ marginTop: -10 }}
           >
             <label style={{ color: "darkgray", fontSize: 11, marginTop: -100 }}>
-              Username
+              Username or Email
             </label>
             <Form.Item
               name="username"
@@ -96,23 +143,6 @@ const LoginPage = () => {
               </Button>
             </Form.Item>
           </Form>
-
-          <div style={{ marginTop: -12 }}>
-            <h6
-              style={{
-                textAlign: "center",
-                color: darkMode ? "lightgray" : "black",
-              }}
-            >
-              Don't have an account?{" "}
-              <Link
-                to="/signup"
-                style={{ color: darkMode ? "lightgray" : "violet" }}
-              >
-                Sign Up
-              </Link>
-            </h6>
-          </div>
         </div>
       </div>
     </>

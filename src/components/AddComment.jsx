@@ -86,13 +86,22 @@ const AddComment = ({ postDetails }) => {
   };
 
   return (
-    <div style={{ maxWidth: 550, margin: '0 auto', padding: '10px', border: '1px solid #e0e0e0', borderRadius: '8px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
+    <div
+      style={{
+        maxWidth: 550,
+        margin: "0 auto",
+        padding: "10px",
+        border: "1px solid #e0e0e0",
+        borderRadius: "8px",
+        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+      }}
+    >
       <Form
         form={form}
         name="add_comment"
         onFinish={handleSubmit}
         initialValues={{
-          remember: true
+          remember: true,
         }}
         layout="vertical"
       >
@@ -101,16 +110,18 @@ const AddComment = ({ postDetails }) => {
             <Form.Item
               label=""
               name="commentBody"
-              rules={[{ required: true, message: 'Please input your comment!' }]}
+              rules={[
+                { required: true, message: "Please input your comment!" },
+              ]}
             >
               <Input
                 placeholder="Add comment"
-                style={{ padding: '5px', width: '100%' }}
+                style={{ padding: "5px", width: "100%" }}
               />
             </Form.Item>
           </Col>
 
-          <Col span={7} style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <Col span={7} style={{ display: "flex", justifyContent: "flex-end" }}>
             <Form.Item>
               <Button type="primary" htmlType="submit">
                 Add Comment
@@ -120,7 +131,11 @@ const AddComment = ({ postDetails }) => {
         </Row>
       </Form>
 
-      <ViewAllCommentsPerPost comments={comments} onDeleteComment={deleteCommentById} onUpdateComment={updateComment}/>
+      <ViewAllCommentsPerPost
+        comments={comments}
+        onDeleteComment={deleteCommentById}
+        onUpdateComment={updateComment}
+      />
     </div>
   );
 };
