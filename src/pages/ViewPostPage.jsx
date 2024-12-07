@@ -20,7 +20,7 @@ const ViewPostPage = () => {
       .catch((error) => {
         console.error("Error fetching post:", error);
       });
-  }, [postId, post]);
+  }, [postId]);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -40,10 +40,8 @@ const ViewPostPage = () => {
     fetchPosts();
   }, [currentUser]);
 
-  const onPostUpdate = () => {
-    // setPosts((prevPosts) =>
-    //   prevPosts.map((post) => (post.id === updatedPost.id ? updatedPost : post))
-    // );
+  const onPostUpdate = (updatedPost) => {
+    setPost(updatedPost);
   };
 
   return (
