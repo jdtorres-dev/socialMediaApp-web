@@ -10,6 +10,25 @@ const LikeUnlikePost = ({ post }) => {
   const [liked, setLiked] = useState(null);
   const { currentUser } = useAuth();
   const [likeId, setLikeId] = useState(0);
+  const [allLike, setAllLike] = useState(null);
+
+  useEffect(() => {
+    const fetchLikes = async () => {
+      try {
+        const response = await PostService.getAllLikePost(post.id);
+        if (response.data) {
+          setAllLike(response.data);
+        } else {
+          setAllLike(0);
+        }
+      } catch (error) {
+        console.error("Error fetching likes:", error);
+        setAllLike(0);
+      }
+    };
+
+    fetchLikes();
+  }, [post.id]);
 
   useEffect(() => {
     PostService.getLikeUnlikePost(post.id, currentUser.id)
@@ -37,6 +56,7 @@ const LikeUnlikePost = ({ post }) => {
 
       await PostService.likePost(requestData);
       setLiked(true);
+      setAllLike((prevCount) => prevCount + 1);
       message.success("Liked Post!");
     } catch (error) {
       console.error("Error liked post", error);
@@ -49,6 +69,7 @@ const LikeUnlikePost = ({ post }) => {
     try {
       console.log("Unliking post with ID:", likeId);
       await PostService.unLikePost(likeId);
+      setAllLike((prevCount) => prevCount - 1);
       message.success("Unliked Post!");
       setLiked(false);
     } catch (error) {
@@ -66,7 +87,7 @@ const LikeUnlikePost = ({ post }) => {
           onClick={handleLike}
           style={{
             marginTop: "15px",
-            marginRight: "10px",
+            // marginRight: "10px",
             color: darkMode ? "white" : "black",
           }}
         />
@@ -79,6 +100,10 @@ const LikeUnlikePost = ({ post }) => {
           style={{ marginTop: "15px", color: darkMode ? "white" : "black" }}
         />
       )}
+
+      <span style={{ color: darkMode ? "white" : "black" }}>
+        {allLike === 0 ? null : allLike}
+      </span>
     </div>
   );
 };

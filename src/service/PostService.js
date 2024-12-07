@@ -82,6 +82,20 @@ class PostService {
     });
   }
 
+  getAllLikeComment(commentId) {
+    return http.get("/post/getAllLikeComment", {
+      params: { commentId },
+      ...this.getAxiosConfig(),
+    });
+  }
+
+  getAllLikePost(postId) {
+    return http.get("/post/getAllLikePost", {
+      params: { postId },
+      ...this.getAxiosConfig(),
+    });
+  }
+
   getPostsByUserId(id) {
     return http.get(`/post/getPostsByUser/${id}`, this.getAxiosConfig());
   }

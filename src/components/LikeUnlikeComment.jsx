@@ -10,6 +10,25 @@ const LikeUnlikeComment = ({ comment }) => {
   const [liked, setLiked] = useState(null);
   const { currentUser } = useAuth();
   const [likeId, setLikeId] = useState(0);
+  const [allLike, setAllLike] = useState(null);
+
+  useEffect(() => {
+    const fetchLikes = async () => {
+      try {
+        const response = await PostService.getAllLikeComment(comment.id);
+        if (response.data) {
+          setAllLike(response.data);
+        } else {
+          setAllLike(0);
+        }
+      } catch (error) {
+        console.error("Error fetching likes:", error);
+        setAllLike(0);
+      }
+    };
+
+    fetchLikes();
+  }, [comment.id]);
 
   useEffect(() => {
     PostService.getLikeUnlikeComment(comment.id, currentUser.id)
@@ -37,6 +56,7 @@ const LikeUnlikeComment = ({ comment }) => {
 
       await PostService.likeComment(requestData);
       setLiked(true);
+      setAllLike((prevCount) => prevCount + 1);
       message.success("Liked Comment!");
     } catch (error) {
       console.error("Error liked comment", error);
@@ -49,6 +69,7 @@ const LikeUnlikeComment = ({ comment }) => {
     try {
       console.log("Unliking post with ID:", likeId);
       await PostService.unlikeComment(likeId);
+      setAllLike((prevCount) => prevCount - 1);
       message.success("Unliked Comment!");
       setLiked(false);
     } catch (error) {
@@ -56,6 +77,8 @@ const LikeUnlikeComment = ({ comment }) => {
       message.error("Error unliking post. Please try again.");
     }
   };
+
+  console.log("count: ", allLike);
 
   return (
     <div>
@@ -66,11 +89,12 @@ const LikeUnlikeComment = ({ comment }) => {
           onClick={handleLike}
           style={{
             marginTop: "15px",
-            marginRight: "10px",
+            // marginRight: "10px",
             color: darkMode ? "white" : "black",
           }}
         />
       )}
+
       {liked === true && (
         <Button
           type="secondary"
@@ -79,6 +103,10 @@ const LikeUnlikeComment = ({ comment }) => {
           style={{ marginTop: "15px", color: darkMode ? "white" : "black" }}
         />
       )}
+
+      <span style={{ color: darkMode ? "white" : "black" }}>
+        {allLike === 0 ? null : allLike}
+      </span>
     </div>
   );
 };
