@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Button, message } from 'antd'
-import { LikeOutlined, DislikeOutlined } from '@ant-design/icons'
-import PostService from '../service/PostService'
+import { LikeOutlined, LikeFilled } from "@ant-design/icons";
+import PostService from "../service/PostService";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
 
@@ -95,7 +95,7 @@ const LikeUnlikePost = ({ post }) => {
       {liked === true && (
         <Button
           type="secondary"
-          icon={<DislikeOutlined />}
+          icon={<LikeFilled />}
           onClick={handleUnlike}
           style={{ marginTop: "15px", color: darkMode ? "white" : "black" }}
         />
