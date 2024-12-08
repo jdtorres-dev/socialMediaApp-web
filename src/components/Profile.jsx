@@ -55,7 +55,7 @@ const Profile = () => {
     };
 
     fetchPosts();
-  }, [postAdded, currentUser]);
+  }, [currentUser, postAdded, user]);
 
   const beforeUpload = (file) => {
     const allowedTypes = [
@@ -138,7 +138,10 @@ const Profile = () => {
       >
         {/* Avatar */}
         <div style={{ width: "50px" }}>
-          <Avatar src={user?.imageUrl} style={{ height: 50, width: 50 }}>
+          <Avatar
+            src={user?.imageUrl}
+            style={{ height: 50, width: 50, fontSize: 20 }}
+          >
             {!user?.imageUrl && user?.username
               ? user.username.charAt(0).toUpperCase()
               : null}

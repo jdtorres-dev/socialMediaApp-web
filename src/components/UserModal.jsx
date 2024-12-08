@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Form, Input, message, Modal, Spin, Divider, Tooltip } from "antd";
+import {
+  Avatar,
+  Form,
+  Input,
+  message,
+  Modal,
+  Spin,
+  Divider,
+  Button,
+} from "antd";
 import { LockOutlined, UserOutlined, MailOutlined } from "@ant-design/icons";
 import { BsFillExclamationCircleFill, BsCheckCircleFill } from "react-icons/bs";
 import { useQueryClient } from "@tanstack/react-query";
@@ -7,6 +16,9 @@ import { useAuth } from "../context/AuthContext";
 import UserService from "../service/UserService";
 import { useGetUserById } from "../queries/UserQueries";
 import { useTheme } from "../context/ThemeContext";
+
+import { CiImageOn } from "react-icons/ci";
+import { GoTrash } from "react-icons/go";
 
 import "../styles/Modal.css";
 
@@ -36,6 +48,7 @@ const UserModal = ({ isModalOpen, onClose }) => {
         email: data?.email,
         imageUrl: data?.imageUrl,
       });
+      setImage(data?.imageUrl);
     }
   }, [isModalOpen, form, data]);
 
@@ -181,11 +194,7 @@ const UserModal = ({ isModalOpen, onClose }) => {
             name: formValues.name,
             username: formValues.username,
             email: formValues.email,
-            imageUrl: image
-              ? image
-              : formValues.imageUrl
-              ? formValues.imageUrl
-              : "https://www.svgrepo.com/show/524211/user.svg",
+            imageUrl: image ? image : formValues.imageUrl,
           };
 
           if (formValues.password) {
@@ -216,7 +225,7 @@ const UserModal = ({ isModalOpen, onClose }) => {
       onCancel={onClose}
       onOk={showConfirmUpdate}
       closable={false}
-      width={350}
+      width={580}
       okButtonProps={{
         style: {
           boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
@@ -227,215 +236,276 @@ const UserModal = ({ isModalOpen, onClose }) => {
           boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
         },
       }}
-      okText="Confirm"
+      okText="Update"
     >
-      <h3
+      <h2
         style={{
           textAlign: "start",
           marginTop: -5,
         }}
       >
         Update User Profile
-      </h3>
+      </h2>
 
       <div
         style={{
           display: "flex",
+          flexDirection: "column",
           alignItems: "center",
-          justifyContent: "start",
-          gap: 20,
-          marginTop: -10,
+          justifyContent: "space-between",
         }}
       >
-        <div style={{ marginTop: -10 }}>
-          {image ? (
-            <img
-              src={image}
-              alt="avatar"
-              style={{ height: 90, width: 90, borderRadius: "50%" }}
-            />
-          ) : data?.imageUrl && !image ? (
-            <img
-              src={data.imageUrl}
-              alt="avatar"
-              style={{ height: 90, width: 90, borderRadius: "50%" }}
-            />
-          ) : (
-            <img
-              src="https://www.svgrepo.com/show/524211/user.svg"
-              alt="placeholder"
-              style={{ height: 90, width: 90, borderRadius: "50%" }}
-            />
-          )}
-        </div>
-
-        <div>
-          <Form
-            form={form}
-            name="update_user_form"
-            onFinish={showConfirmUpdate}
-            onFinishFailed={(errorInfo) => {
-              console.log("Form submission failed:", errorInfo);
-            }}
-          >
-            <label
-              style={{ marginTop: "-12px", color: "darkgray", fontSize: 11 }}
-            >
-              Name
-            </label>
-            <Form.Item
-              name="name"
-              rules={[
-                { required: true, message: "Please input your name." },
-                {
-                  min: 3,
-                  message: "Name must be at least 3 characters.",
-                },
-                {
-                  max: 50,
-                  message: "Name must be less than 50 characters long.",
-                },
-                {
-                  pattern: /^[A-Za-z\s]+$/,
-                  message: "Name must only contain letters.",
-                },
-              ]}
-            >
-              <Input
-                className="signup-input"
-                prefix={<UserOutlined style={{ fontSize: 13 }} />}
-                placeholder="Enter Your Name"
-              />
-            </Form.Item>
-
-            <label
-              style={{ marginTop: "-12px", color: "darkgray", fontSize: 11 }}
-            >
-              Username
-            </label>
-            <Form.Item
-              name="username"
-              rules={[
-                { required: true, message: "Please input a username." },
-                {
-                  min: 5,
-                  message: "Username must be at least 5 characters.",
-                },
-                {
-                  max: 50,
-                  message: "Username must be less than 50 characters.",
-                },
-                {
-                  pattern: /^[A-Za-z0-9._-]+$/,
-                  message:
-                    "Username can only contain letters, numbers, and special characters (-, _, .).",
-                },
-              ]}
-            >
-              <Input
-                className="signup-input"
-                prefix={<UserOutlined style={{ fontSize: 13 }} />}
-                suffix={
-                  usernameIsLoading ? (
-                    <Spin />
-                  ) : usernameExists ? (
-                    <BsFillExclamationCircleFill style={{ color: "red" }} />
-                  ) : usernameValid ? (
-                    <BsCheckCircleFill style={{ color: "green" }} />
-                  ) : null
-                }
-                placeholder="Enter Your Username"
-                onBlur={(e) => checkUsername(e.target.value)}
-              />
-            </Form.Item>
-          </Form>
-        </div>
-      </div>
-
-      {/* upload file */}
-      <div style={{ marginTop: -28 }}>
-        <Tooltip title="Upload an image" placement="topLeft">
-          <input
-            type="file"
-            onChange={handleImageUpload}
-            style={{
-              whiteSpace: "wrap",
-              marginBottom: 10,
-              width: "100%",
-              color: darkMode ? "#333" : "white",
-            }}
-          />
-        </Tooltip>
-      </div>
-
-      <div>
-        <Form
-          form={form}
-          name="update_user_form"
-          onFinish={showConfirmUpdate}
-          onFinishFailed={(errorInfo) => {
-            console.log("Form submission failed:", errorInfo);
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 20,
+            marginTop: -5,
           }}
         >
-          <label
-            style={{ marginTop: "-12px", color: "darkgray", fontSize: 11 }}
+          <div
+            className="image-container"
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              marginTop: 0,
+            }}
           >
-            Email
-          </label>
-          <Form.Item
-            name="email"
-            rules={[
-              { required: true, message: "Please input an email." },
-              { type: "email", message: "Please enter a valid email." },
-            ]}
-          >
-            <Input
-              className="signup-input"
-              prefix={<MailOutlined style={{ fontSize: 13 }} />}
-              suffix={
-                emailIsLoading ? (
-                  <Spin />
-                ) : emailExists ? (
-                  <BsFillExclamationCircleFill style={{ color: "red" }} />
-                ) : emailValid ? (
-                  <BsCheckCircleFill style={{ color: "green" }} />
-                ) : null
-              }
-              placeholder="Enter Your Email"
-              onBlur={(e) => checkEmail(e.target.value)}
-            />
-          </Form.Item>
+            <div>
+              {image ? (
+                <div>
+                  <Avatar
+                    src={image}
+                    style={{ height: 90, width: 90, border: "50%" }}
+                  />
+                </div>
+              ) : (
+                <div>
+                  <Avatar
+                    src={data?.imageUrl}
+                    style={{ height: 90, width: 90, fontSize: 70 }}
+                  >
+                    {!data?.imageUrl && data?.username
+                      ? data.username.charAt(0).toUpperCase()
+                      : null}
+                  </Avatar>
+                </div>
+              )}
+            </div>
 
-          <label
-            style={{ marginTop: "-12px", color: "darkgray", fontSize: 11 }}
-          >
-            Password
-          </label>
-          <Form.Item
-            name="password"
-            rules={[
-              {
-                pattern:
-                  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/,
-                message:
-                  "Password must be at least 8 characters long and contain uppercase, lowercase, a number, and a special character.",
-              },
-            ]}
-          >
-            <Input.Password
-              className="signup-input"
-              prefix={<LockOutlined style={{ fontSize: 13 }} />}
-              type="password"
-              placeholder="Enter Your New Password (Leave empty if you don't want to change)"
-            />
-          </Form.Item>
-        </Form>
+            {/* upload file */}
+            <div
+              style={{
+                position: "relative",
+                width: "100%",
+                marginTop: 5,
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <label
+                  htmlFor="modal-upload"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    cursor: "pointer",
+                    width: 40,
+                    height: 25,
+                    backgroundColor: "#1677ff",
+                    borderRadius: "15px",
+                    color: "#fff",
+                  }}
+                >
+                  <CiImageOn style={{ fontSize: "25px" }} />
+                </label>
+                <input
+                  id="modal-upload"
+                  type="file"
+                  onChange={handleImageUpload}
+                  style={{
+                    display: "none",
+                  }}
+                />
+                <Button
+                  onClick={() => setImage(data.imageUrl)}
+                  style={{
+                    width: 40,
+                    height: 25,
+                    border: "1px solid red",
+                    borderRadius: 15,
+                    color: darkMode ? "#fff" : "gray",
+                  }}
+                  icon={<GoTrash style={{ fontSize: 18, color: "red" }} />}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <Form
+              form={form}
+              name="update_user_form"
+              onFinish={showConfirmUpdate}
+              onFinishFailed={(errorInfo) => {
+                console.log("Form submission failed:", errorInfo);
+              }}
+            >
+              {/*Name*/}
+              <label
+                style={{ marginTop: "-12px", color: "darkgray", fontSize: 11 }}
+              >
+                Name
+              </label>
+              <Form.Item
+                name="name"
+                rules={[
+                  { required: true, message: "Please input your name." },
+                  {
+                    min: 3,
+                    message: "Name must be at least 3 characters.",
+                  },
+                  {
+                    max: 50,
+                    message: "Name must be less than 50 characters long.",
+                  },
+                  {
+                    pattern: /^[A-Za-z\s]+$/,
+                    message: "Name must only contain letters.",
+                  },
+                ]}
+              >
+                <Input
+                  prefix={<UserOutlined style={{ fontSize: 13 }} />}
+                  placeholder="Enter Your Name"
+                />
+              </Form.Item>
+
+              {/*Email*/}
+              <label
+                style={{ marginTop: "-12px", color: "darkgray", fontSize: 11 }}
+              >
+                Email
+              </label>
+              <Form.Item
+                name="email"
+                rules={[
+                  { required: true, message: "Please input an email." },
+                  { type: "email", message: "Please enter a valid email." },
+                ]}
+              >
+                <Input
+                  prefix={<MailOutlined style={{ fontSize: 13 }} />}
+                  suffix={
+                    emailIsLoading ? (
+                      <Spin />
+                    ) : emailExists ? (
+                      <BsFillExclamationCircleFill style={{ color: "red" }} />
+                    ) : emailValid ? (
+                      <BsCheckCircleFill style={{ color: "green" }} />
+                    ) : null
+                  }
+                  placeholder="Enter Your Email"
+                  onBlur={(e) => checkEmail(e.target.value)}
+                />
+              </Form.Item>
+
+              {/*New Password*/}
+            </Form>
+          </div>
+
+          <div>
+            <Form
+              form={form}
+              name="update_user_form"
+              onFinish={showConfirmUpdate}
+              onFinishFailed={(errorInfo) => {
+                console.log("Form submission failed:", errorInfo);
+              }}
+            >
+              {/*Username*/}
+              <label
+                style={{ marginTop: "-12px", color: "darkgray", fontSize: 11 }}
+              >
+                Username
+              </label>
+              <Form.Item
+                name="username"
+                rules={[
+                  { required: true, message: "Please input a username." },
+                  {
+                    min: 5,
+                    message: "Username must be at least 5 characters.",
+                  },
+                  {
+                    max: 50,
+                    message: "Username must be less than 50 characters.",
+                  },
+                  {
+                    pattern: /^[A-Za-z0-9._-]+$/,
+                    message:
+                      "Username can only contain letters, numbers, and special characters (-, _, .).",
+                  },
+                ]}
+              >
+                <Input
+                  prefix={<UserOutlined style={{ fontSize: 13 }} />}
+                  suffix={
+                    usernameIsLoading ? (
+                      <Spin />
+                    ) : usernameExists ? (
+                      <BsFillExclamationCircleFill style={{ color: "red" }} />
+                    ) : usernameValid ? (
+                      <BsCheckCircleFill style={{ color: "green" }} />
+                    ) : null
+                  }
+                  placeholder="Enter Your Username"
+                  onBlur={(e) => checkUsername(e.target.value)}
+                />
+              </Form.Item>
+
+              {/*New Password*/}
+              <label
+                style={{ marginTop: "-12px", color: "darkgray", fontSize: 11 }}
+              >
+                Password
+              </label>
+              <Form.Item
+                name="password"
+                rules={[
+                  {
+                    pattern:
+                      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/,
+                    message:
+                      "Password must be at least 8 characters long and contain uppercase, lowercase, a number, and a special character.",
+                  },
+                ]}
+              >
+                <Input.Password
+                  prefix={<LockOutlined style={{ fontSize: 13 }} />}
+                  type="password"
+                  autoComplete="off"
+                  // placeholder="Leave empty if you don't want to change"
+                />
+              </Form.Item>
+            </Form>
+          </div>
+        </div>
       </div>
       <Divider
         style={{
           borderColor: darkMode ? "white" : "gray",
-          marginTop: 0,
-          marginBottom: 15,
+          marginTop: 10,
+          marginBottom: 10,
           height: 5,
         }}
       />

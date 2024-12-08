@@ -144,8 +144,7 @@ const SignupPage = () => {
     try {
       const requestData = {
         ...values,
-        imageUrl:
-          image || "https://www.svgrepo.com/show/221028/user-avatar.svg",
+        imageUrl: image,
       };
       console.log(requestData);
 
@@ -262,7 +261,7 @@ const SignupPage = () => {
                     />
                   ) : (
                     <Image
-                      src="https://www.svgrepo.com/show/221028/user-avatar.svg"
+                      src="https://www.svgrepo.com/show/526853/camera.svg"
                       alt="placeholder"
                       style={{
                         height: 150,
@@ -288,31 +287,6 @@ const SignupPage = () => {
                       justifyContent: "space-between",
                     }}
                   >
-                    <input
-                      id="user-upload"
-                      type="file"
-                      onChange={handleImageUpload}
-                      style={{
-                        display: "none",
-                      }}
-                    />
-                    <Button
-                      onClick={() =>
-                        setImage(
-                          "https://www.svgrepo.com/show/221028/user-avatar.svg"
-                        )
-                      }
-                      style={{
-                        width: 50,
-                        height: 25,
-                        border: "1px solid gray",
-                        borderRadius: 15,
-                        color: darkMode ? "#fff" : "gray",
-                      }}
-                      icon={
-                        <GoTrash style={{ fontSize: 18, color: "black" }} />
-                      }
-                    />
                     <label
                       htmlFor="user-upload"
                       style={{
@@ -329,6 +303,29 @@ const SignupPage = () => {
                     >
                       <CiImageOn style={{ fontSize: "25px" }} />
                     </label>
+                    <input
+                      id="user-upload"
+                      type="file"
+                      onChange={handleImageUpload}
+                      style={{
+                        display: "none",
+                      }}
+                    />
+                    <Button
+                      onClick={() =>
+                        setImage(
+                          "https://www.svgrepo.com/show/526853/camera.svg"
+                        )
+                      }
+                      style={{
+                        width: 50,
+                        height: 25,
+                        border: "1px solid red",
+                        borderRadius: 15,
+                        color: darkMode ? "#fff" : "gray",
+                      }}
+                      icon={<GoTrash style={{ fontSize: 18, color: "red" }} />}
+                    />
                   </div>
                 </div>
               </div>
