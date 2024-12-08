@@ -4,6 +4,7 @@ import Navbar from "../components/NavBar";
 import ViewPost from "../components/ViewPost";
 import PostService from "../service/PostService";
 import { useAuth } from "../context/AuthContext";
+import { useGetUserById } from "../queries/UserQueries";
 
 const ViewPostPage = () => {
   const params = useParams();
@@ -11,6 +12,7 @@ const ViewPostPage = () => {
   const [post, setPost] = useState(null);
   const [posts, setPosts] = useState(null);
   const { currentUser } = useAuth();
+  const { data: user } = useGetUserById(currentUser.id);
 
   useEffect(() => {
     PostService.getPostById(postId)
@@ -20,7 +22,7 @@ const ViewPostPage = () => {
       .catch((error) => {
         console.error("Error fetching post:", error);
       });
-  }, [postId]);
+  }, [postId, user]);
 
   useEffect(() => {
     const fetchPosts = async () => {

@@ -16,7 +16,7 @@ import LikeUnlikePost from "./LikeUnlikePost";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import PostService from "../service/PostService";
-import { DashOutlined } from "@ant-design/icons";
+import { PiDotsThreeBold } from "react-icons/pi";
 import UpdatePost from "./UpdatePost";
 
 const ViewPost = ({ setPost, post, setPosts, onPostUpdate }) => {
@@ -146,7 +146,9 @@ const ViewPost = ({ setPost, post, setPosts, onPostUpdate }) => {
                   overlay={settingsMenu(post.id, post)}
                   trigger={["click"]}
                 >
-                  <DashOutlined style={{ color: "Blue", fontSize: "18px" }} />
+                  <PiDotsThreeBold
+                    style={{ color: "Blue", fontSize: "18px" }}
+                  />
                 </Dropdown>
               )}
             </div>

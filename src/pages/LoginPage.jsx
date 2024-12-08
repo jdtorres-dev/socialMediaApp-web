@@ -108,7 +108,7 @@ const LoginPage = () => {
               <Input
                 className="login-input"
                 prefix={<UserOutlined style={{ fontSize: 13 }} />}
-                placeholder="Username"
+                placeholder="Username or Email"
               />
             </Form.Item>
 

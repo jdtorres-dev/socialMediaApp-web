@@ -33,7 +33,7 @@ const AddPost = () => {
         setIsLoading(false);
         console.log("error", error);
       });
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -47,7 +47,7 @@ const AddPost = () => {
     };
 
     fetchPosts();
-  }, [postAdded]);
+  }, [postAdded, user]);
 
   const beforeUpload = (file) => {
     const allowedTypes = [
@@ -138,7 +138,10 @@ const AddPost = () => {
       >
         {/* Avatar */}
         <div style={{ width: "50px" }}>
-          <Avatar src={user?.imageUrl} style={{ height: 50, width: 50 }}>
+          <Avatar
+            src={user?.imageUrl}
+            style={{ height: 50, width: 50, fontSize: 20 }}
+          >
             {!user?.imageUrl && user?.username
               ? user.username.charAt(0).toUpperCase()
               : null}
