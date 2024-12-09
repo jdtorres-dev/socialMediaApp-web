@@ -1,0 +1,104 @@
+/* Container styles */
+.container {
+  display: flex;
+  flex-wrap: wrap; /* Allows wrapping when there's not enough space */
+  padding: 0px;
+}
+
+/* Common styles for boxes */
+.box-30, .box-70 {
+  background: #fff;
+  padding: 20px 0px;
+  text-align: center;
+  min-width: 100px; /* Prevents collapsing too much */
+}
+
+/* Responsive layout for smaller screens */
+@media (max-width: 887px) { /* Adjust to stack for tablet or smaller screens */
+  .box-30, .box-70 {
+      flex: 1 1 100%; /* Make all boxes take full width */
+      max-width: 100%; /* Ensure they don't exceed full width */
+  }
+}
+
+.box-trending {
+  background: #fff;
+  padding: 20px 0px;
+  text-align: center;
+  min-width: 100px; /* Prevents collapsing too much */
+}
+
+/* Responsive layout for smaller screens */
+@media (max-width: 1247px) { /* Adjust to stack for tablet or smaller screens */
+  .box-trending {
+      flex: 1 1 100%; /* Make all boxes take full width */
+      max-width: 100%; /* Ensure they don't exceed full width */
+      background-color: #ECECEC;
+  }
+}
+
+/* Profile navigation container styles */
+.profileNav-container {
+  display: flex;
+  flex-direction: column;
+  width: 330px;
+  min-width: 100px;
+  margin: 0 auto;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+}
+
+@media (max-width: 887px) {
+  .profileNav-container {
+      width: auto; /* Adjust width for responsive layout */
+      max-width: 470px;
+  }
+}
+
+/* Parent profile container */
+.parent-profile {
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  flex-wrap: wrap; /* Ensure children wrap in smaller screens */
+}
+
+.trendingColumns-container {
+  display: flex;
+  flex-direction: column;
+  width: 330px;
+  min-width: 100px;
+  margin: 0 auto;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+}
+
+@media (max-width: 1247px) {
+  .trendingColumns-container {
+      width: auto; /* Adjust width for responsive layout */
+      max-width: 470px;
+      justify-content: center;
+  }
+}
+
+.friendsSuggestion-container {
+  display: flex;
+  flex-direction: column;
+  width: 330px;
+  min-width: 100px;
+  margin: 0 auto;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+}
+
+@media (max-width: 887px) {
+  .friendsSuggestion-container {
+      width: auto; /* Adjust width for responsive layout */
+      max-width: 470px;
+  }
+}

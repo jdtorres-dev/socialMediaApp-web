@@ -5,8 +5,8 @@ import AddPost from "./AddPost";
 const Home = () => {
   return (
     <>
-    <Navbar />
-    <div style={{ marginTop: '20px' }}>
+    {/* <Navbar /> */}
+    <div style={{ marginBottom: '20px' }}>
       <AddPost />
     </div>
   </>
