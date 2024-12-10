@@ -7,7 +7,7 @@
 
 .main-signup{
     height: 410px;
-    width: 460px;
+    width: 390px;
     border-radius: 10px;
     padding-top: 20px;
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
@@ -48,8 +48,7 @@
 }
 
 .title {
-    align-self: flex-start !important;
-    margin-left: 30px;
+    margin-left: 25px;
 }
 
 .image-container {

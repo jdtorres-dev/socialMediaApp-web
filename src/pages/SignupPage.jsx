@@ -187,7 +187,7 @@ const SignupPage = () => {
                 flexDirection: "row",
                 justifyContent: "space-between",
                 marginTop: -25,
-                gap: 200,
+                width: "100%",
               }}
             >
               <div>
@@ -240,7 +240,7 @@ const SignupPage = () => {
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "space-between",
-                gap: 40,
+                gap: 30,
                 marginTop: -8,
               }}
             >
@@ -257,16 +257,17 @@ const SignupPage = () => {
                     <Image
                       src={image}
                       alt="avatar"
-                      style={{ height: 150, width: 150, borderRadius: "10%" }}
+                      style={{ height: 100, width: 100, borderRadius: "10%" }}
                     />
                   ) : (
                     <Image
                       src="https://www.svgrepo.com/show/526853/camera.svg"
                       alt="placeholder"
                       style={{
-                        height: 150,
-                        width: 150,
+                        height: 100,
+                        width: 100,
                         borderRadius: "10%",
+                        backgroundColor: "#fff",
                       }}
                     />
                   )}
@@ -294,7 +295,7 @@ const SignupPage = () => {
                         alignItems: "center",
                         justifyContent: "center",
                         cursor: "pointer",
-                        width: 50,
+                        width: 40,
                         height: 25,
                         backgroundColor: "#1677ff",
                         borderRadius: "15px",
@@ -318,11 +319,10 @@ const SignupPage = () => {
                         )
                       }
                       style={{
-                        width: 50,
+                        width: 40,
                         height: 25,
                         border: "1px solid red",
                         borderRadius: 15,
-                        color: darkMode ? "#fff" : "gray",
                       }}
                       icon={<GoTrash style={{ fontSize: 18, color: "red" }} />}
                     />

@@ -5,6 +5,8 @@ import PostService from '../service/PostService';
 import ViewAllCommentsPerPost from './ViewAllCommentsPerPost';
 import { useParams } from 'react-router-dom';
 
+const { TextArea } = Input;
+
 const AddComment = ({ postDetails }) => {
   const [form] = Form.useForm();
   const params = useParams();
@@ -12,14 +14,17 @@ const AddComment = ({ postDetails }) => {
   const { currentUser } = useAuth();
   const [comments, setComments] = useState([]);
   const [commentAdded, setCommentAdded] = useState(false);
-
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    setIsLoading(true);
     PostService.getCommnetsByPostId(postId)
       .then((response) => {
+        setIsLoading(false);
         setComments(response.data);
       })
       .catch((error) => {
+        setIsLoading(false);
         console.log("error", error);
       });
   }, []);
@@ -27,7 +32,8 @@ const AddComment = ({ postDetails }) => {
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        const fetchedComments = await PostService.getCommnetsByPostId(postId);  
+        const fetchedComments = await PostService.getCommnetsByPostId(postId);
+        setIsLoading(false);
         setComments(fetchedComments.data);
       } catch (error) {
         console.error("Error fetching comments:", error);
@@ -35,40 +41,38 @@ const AddComment = ({ postDetails }) => {
       }
     };
 
-    fetchComments(); 
-
+    fetchComments();
   }, [commentAdded]);
 
   const deleteCommentById = async (id) => {
     try {
-        await PostService.deleteCommentById(id);
-        message.success("Comment deleted successfully");
-        setCommentAdded((prev) => !prev);
+      await PostService.deleteCommentById(id);
+      message.success("Comment deleted successfully");
+      setCommentAdded((prev) => !prev);
     } catch (error) {
-        console.error("Error deleting comment", error);
-        message.error("Error deleting comment. Please try again.");
+      console.error("Error deleting comment", error);
+      message.error("Error deleting comment. Please try again.");
     }
-};
+  };
 
   const updateComment = async (id, cBody) => {
-    try{
-        await PostService.updateComment(id, cBody);
-        message.success("Comment updated successfully");
-        setCommentAdded((prev) => !prev);
-    }catch (error){
+    try {
+      await PostService.updateComment(id, cBody);
+      message.success("Comment updated successfully");
+      setCommentAdded((prev) => !prev);
+    } catch (error) {
       console.error("Error updating comment", error);
       message.error("Error updating comment. Please try again.");
     }
-
-  }
+  };
 
   const handleSubmit = async (values) => {
-    console.log('Comment Values:', values);
+    console.log("Comment Values:", values);
     try {
       const requestData = {
         ...values,
         post: postDetails,
-        user: currentUser
+        user: currentUser,
       };
       console.log(requestData);
 
@@ -78,7 +82,6 @@ const AddComment = ({ postDetails }) => {
 
       message.success("Comment successfully added!");
       form.resetFields();
-
     } catch (error) {
       console.error("Error during form submission:", error);
       message.error("Error adding comment. Please try again.");
@@ -114,9 +117,10 @@ const AddComment = ({ postDetails }) => {
                 { required: true, message: "Please input your comment!" },
               ]}
             >
-              <Input
+              <TextArea
                 placeholder="Add comment"
                 style={{ padding: "5px", width: "100%" }}
+                autoSize={{ minRows: 1, maxRows: 3 }}
               />
             </Form.Item>
           </Col>
@@ -135,6 +139,7 @@ const AddComment = ({ postDetails }) => {
         comments={comments}
         onDeleteComment={deleteCommentById}
         onUpdateComment={updateComment}
+        isLoading={isLoading}
       />
     </div>
   );
