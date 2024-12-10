@@ -68,7 +68,7 @@ const FriendsSuggestion = () => {
   );
 
   return (
-    <div className="profileNav-container">
+    <div className="friendsSuggestion-container">
       <Dropdown
         overlay={isMobileView && suggestions.length > 0 ? dropdownMenu : null}
         trigger={["click"]}

@@ -50,7 +50,7 @@
   background-color: #fff;
 }
 
-@media (max-width: 887px) {
+@media (max-width: 910px) {
   .profileNav-container {
       width: auto; /* Adjust width for responsive layout */
       max-width: 470px;
@@ -96,7 +96,7 @@
   background-color: #fff;
 }
 
-@media (max-width: 887px) {
+@media (max-width: 910px) {
   .friendsSuggestion-container {
       width: auto; /* Adjust width for responsive layout */
       max-width: 470px;
