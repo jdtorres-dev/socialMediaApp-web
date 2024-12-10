@@ -23,6 +23,7 @@ const UpdatePost = ({ onOpen, onClose, post, onPostUpdate }) => {
 
   const [form] = Form.useForm();
   const [image, setImage] = useState(post.imageUrl || "");
+  const [bodyInvalid, setBodyInvalid] = useState(false);
 
   useEffect(() => {
     if (onOpen) {
@@ -106,6 +107,11 @@ const UpdatePost = ({ onOpen, onClose, post, onPostUpdate }) => {
     });
   };
 
+  const isFormValid = () => {
+    const errors = form.getFieldsError();
+    return !errors.some((error) => error.errors.length > 0) && !bodyInvalid;
+  };
+
   return (
     <Modal
       className={darkMode ? "ant-modal-dark" : ""}
@@ -115,6 +121,7 @@ const UpdatePost = ({ onOpen, onClose, post, onPostUpdate }) => {
       closable={false}
       width={600}
       okButtonProps={{
+        disabled: !isFormValid(),
         style: {
           boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
         },
@@ -214,9 +221,6 @@ const UpdatePost = ({ onOpen, onClose, post, onPostUpdate }) => {
                 width: 30,
                 height: 25,
                 padding: 0,
-                // border: "none",
-                // boxShadow: "none",
-                // backgroundColor: "transparent",
                 marginTop: -20,
               }}
               icon={
@@ -244,12 +248,26 @@ const UpdatePost = ({ onOpen, onClose, post, onPostUpdate }) => {
           <Form.Item
             label=""
             name="body"
-            rules={[{ required: true, message: "Please input your post!" }]}
+            rules={[
+              { required: true, message: "Please input your post!" },
+              {
+                min: 1,
+                message: "Body must be at least 1 character.",
+              },
+              {
+                max: 255,
+                message: "Body must be less than 255 character.",
+              },
+            ]}
           >
             <TextArea
               autoSize={{ minRows: 2, maxRows: 5 }}
               style={{
                 width: "100%",
+              }}
+              onChange={(e) => {
+                const value = e.target.value;
+                setBodyInvalid(value.length < 1 || value.length > 255);
               }}
             />
           </Form.Item>
