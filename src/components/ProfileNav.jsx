@@ -8,24 +8,17 @@ import {
   HeartOutlined,
 } from "@ant-design/icons";
 import IconWithTextCard from "../components/IconWithTextCard";
+import { useTheme } from "../context/ThemeContext";
 
 import UserModal from "../components/UserModal";
 
 // get details
 import { useAuth } from "../context/AuthContext";
 import { useGetUserById } from "../queries/UserQueries";
-
-const { Sider } = Layout;
-const { Title, Text } = Typography;
-
-const handleClick = () => {
-  console.log("Edit Profile button clicked!");
-  // Add your logic here
-
-};
+const { Text } = Typography;
 
 const ProfileNav = () => {
-
+  const { darkMode } = useTheme();
   const [updateUser, setUpdateUser] = useState(false);
 
   // get details
@@ -35,7 +28,7 @@ const ProfileNav = () => {
 
   return (
     <>
-      <div className="profileNav-container">
+      <div className="profileNav-container" style={{backgroundColor: darkMode ? "#3b3b3b" : "White"}}>
         {/* Profile Section */}
         <div
           style={{
@@ -52,13 +45,13 @@ const ProfileNav = () => {
                 src={data?.imageUrl || null}// Avatar source
                 style={{ borderRadius: '50%', marginBottom: "10px"}} // Make the image circular
               />
-          <Text strong style={{ fontSize: "16px" }}>
+          <Text strong style={{ fontSize: "16px", color: darkMode ? "White": "Black"}}>
             {data?.name}
           </Text>
-          <Text type="secondary" style={{ fontSize: "14px" }}>
+          <Text type="secondary" style={{ fontSize: "14px", color: darkMode ? "White": "Black" }}>
             {data?.username}
           </Text>
-          <Text type="primary" style={{ fontSize: "14px" }}>
+          <Text type="primary" style={{ fontSize: "14px", color: darkMode ? "White": "Black" }}>
             This is my bio.
           </Text>
           <Button
@@ -85,15 +78,15 @@ const ProfileNav = () => {
             icon={
               <UserOutlined style={{ fontSize: "32px", color: "#1890ff" }} />
             }
-            title="Followers"
-            description="25,400"
+            title={<span style={{color: darkMode ? "White": "Black"}}>Followers</span>}
+            description={<span style={{color: darkMode ? "White": "Black"}}>25,400</span>}
           />
           <IconWithTextCard
             icon={
               <HeartOutlined style={{ fontSize: "32px", color: "#ff4d4f" }} />
             }
-            title="Likes"
-            description="15,200"
+            title={<span style={{color: darkMode ? "White": "Black"}}>Likes</span>}
+            description={<span style={{color: darkMode ? "White": "Black"}}>15,200</span>}
           />
         </div>
       </div>

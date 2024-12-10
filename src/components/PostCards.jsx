@@ -174,6 +174,7 @@ const PostCards = ({ posts, setPosts }) => {
             <Typography
               style={{
                 color: darkMode ? "white" : "black",
+                textAlign: "left",
               }}
             >
               {post.body}
