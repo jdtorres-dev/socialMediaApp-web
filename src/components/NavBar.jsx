@@ -50,13 +50,13 @@ const Navbar = () => {
           <Switch checked={darkMode} onChange={toggleDarkMode} />
         </Space>
       </Menu.Item>
-      <Menu.Item
+      {/*<Menu.Item
         key="2"
         icon={<UserOutlined />}
         onClick={() => setUpdateUser(true)}
       >
         Update User
-      </Menu.Item>
+      </Menu.Item>*/}
       <Menu.Item
         key="3"
         icon={<PoweroffOutlined />}

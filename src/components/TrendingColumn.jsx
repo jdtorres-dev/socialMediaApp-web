@@ -1,5 +1,7 @@
 import React from 'react';
 import { List, Avatar, Typography, Card } from 'antd';
+import { useTheme } from "../context/ThemeContext";
+
 
 const { Title } = Typography;
 
@@ -26,9 +28,12 @@ const trendingData = [
 ];
 
 const TrendingColumn = () => {
+  const { darkMode } = useTheme();
+
   return (
-    <div className="trendingColumns-container">
-        <Card title="What's Trending" bordered={false} style={{ width: "auto" }}>
+    <div className="trendingColumns-container" style={{backgroundColor: darkMode ? "#3b3b3b" : "White"}}>
+        <Card title={<span style={{ color: darkMode ? "white" : "black" }}>What's Trending</span>}
+              bordered={false} style={{ width: "auto", backgroundColor: darkMode ? "#3b3b3b" : "White"}}>
         <List
             itemLayout="horizontal"
             dataSource={trendingData}
@@ -36,8 +41,8 @@ const TrendingColumn = () => {
             <List.Item>
                 <List.Item.Meta
                 avatar={<Avatar src={item.imageUrl} />}
-                title={<a href={`/trending/${item.id}`}>{item.title}</a>}
-                description={item.description}
+                title={<span style={{ color: darkMode ? "white" : "black" }}><a href={`/trending/${item.id}`}>{item.title}</a></span>}
+                description={<span style={{ color: darkMode ? "white" : "black" }}>{item.description}</span>}
                 />
             </List.Item>
             )}
