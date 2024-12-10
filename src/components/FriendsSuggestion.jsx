@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Input, List, Card, Avatar, Button, Dropdown, Menu } from "antd";
 import { UserOutlined } from "@ant-design/icons";
-
+import { useTheme } from "../context/ThemeContext";
 const friendsData = [
   { id: 1, name: "Alice Johnson", avatar: "" },
   { id: 2, name: "Bob Smith", avatar: "" },
@@ -11,6 +11,7 @@ const friendsData = [
 ];
 
 const FriendsSuggestion = () => {
+  const { darkMode } = useTheme();
   const [searchTerm, setSearchTerm] = useState("");
   const [suggestions, setSuggestions] = useState(friendsData);
   const [isMobileView, setIsMobileView] = useState(false);
@@ -52,7 +53,7 @@ const FriendsSuggestion = () => {
               icon={!friend.avatar && <UserOutlined />}
               style={{ marginRight: "10px" }}
             />
-            <span>{friend.name}</span>
+            <span style={{ color: darkMode ? "white" : "black" }}>{friend.name}</span>
             <Button
               type="link"
               size="small"
@@ -68,7 +69,7 @@ const FriendsSuggestion = () => {
   );
 
   return (
-    <div className="friendsSuggestion-container">
+    <div className="friendsSuggestion-container" style={{backgroundColor: darkMode ? "#3b3b3b" : "White"}}>
       <Dropdown
         overlay={isMobileView && suggestions.length > 0 ? dropdownMenu : null}
         trigger={["click"]}
@@ -83,11 +84,12 @@ const FriendsSuggestion = () => {
       </Dropdown>
       {!isMobileView && (
         <List
+        style={{ backgroundColor: darkMode ? "#3b3b3b" : "White" }}
           itemLayout="horizontal"
           dataSource={suggestions}
           renderItem={(friend) => (
             <List.Item>
-              <Card style={{ width: "100%" }}>
+              <Card style={{ width: "100%" , backgroundColor: darkMode ? "#3b3b3b" : "White" }}>
                 <Card.Meta
                   avatar={
                     friend.avatar ? (
@@ -96,7 +98,7 @@ const FriendsSuggestion = () => {
                       <Avatar icon={<UserOutlined />} />
                     )
                   }
-                  title={friend.name}
+                  title={<span style={{ color: darkMode ? "white" : "black" }}>{friend.name}</span>}
                   description={
                     <Button
                       type="primary"

@@ -4,8 +4,11 @@ import Navbar from "../components/NavBar";
 import ProfileNav from "../components/ProfileNav"; // Import the SideNav component
 import TrendingColumn from "../components/TrendingColumn";
 import "../styles/ProfilePage.css";
+import { useTheme } from "../context/ThemeContext";
 
 const ProfilePage = () => {
+  const { darkMode } = useTheme();
+
   return (
     <>
       <Navbar />
@@ -19,16 +22,16 @@ const ProfilePage = () => {
           <div className="box-70"><Profile /></div>
         </div>
       </div> */}
-      <div className="parent-profile" style={{ marginTop: "0px" }}>
-        <div className="box-30">
+      <div className="parent-profile" style={{ marginTop: "0px",  backgroundColor: darkMode ? "#3b3b3b" : "White" }}>
+        <div className="box-30" style={{ backgroundColor: darkMode ? "#3b3b3b" : "White"}}>
           <div>
             <ProfileNav />
           </div>
         </div>
-        <div className="box-70">
+        <div className="box-70" style={{ backgroundColor: darkMode ? "#3b3b3b" : "White"}}>
           <Profile />
         </div>
-        <div className="box-trending">
+        <div className="box-trending" style={{ backgroundColor: darkMode ? "#3b3b3b" : "White"}}>
             <TrendingColumn />
         </div>
       </div>

@@ -134,6 +134,7 @@ const AddPost = () => {
           padding: "15px",
           borderRadius: "8px",
           boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+          backgroundColor: darkMode ? "#3b3b3b" : "White"
         }}
       >
         {/* Avatar */}
