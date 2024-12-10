@@ -102,7 +102,7 @@ const UserModal = ({ isModalOpen, onClose }) => {
       return;
     }
 
-    if (!value || value.length < 5) {
+    if (!value || value.length < 5 || value.length > 50) {
       setUsernameExists(false);
       setUsernameValid(false);
       return;
@@ -148,6 +148,13 @@ const UserModal = ({ isModalOpen, onClose }) => {
     }
 
     if (!value || value.length < 5) {
+      setEmailExists(false);
+      setEmailValid(false);
+      return;
+    }
+
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailPattern.test(value)) {
       setEmailExists(false);
       setEmailValid(false);
       return;

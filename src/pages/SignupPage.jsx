@@ -65,7 +65,7 @@ const SignupPage = () => {
   }, [image]);
 
   const checkUsername = async (value) => {
-    if (!value || value.length < 3) {
+    if (!value || value.length < 5 || value.length > 50) {
       setUsernameExists(false);
       setUsernameValid(false);
       return;
@@ -107,6 +107,14 @@ const SignupPage = () => {
       setEmailValid(false);
       return;
     }
+
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailPattern.test(value)) {
+      setEmailExists(false);
+      setEmailValid(false);
+      return;
+    }
+
     setEmailIsLoading(true);
     try {
       const response = await UserService.checkEmail(value);
@@ -140,7 +148,10 @@ const SignupPage = () => {
   };
 
   const onFinish = async (values) => {
-    console.log("Final image URL:", image);
+    if (emailExists || usernameExists) {
+      return;
+    }
+
     try {
       const requestData = {
         ...values,
