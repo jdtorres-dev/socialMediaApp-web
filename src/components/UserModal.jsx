@@ -38,6 +38,11 @@ const UserModal = ({ isModalOpen, onClose }) => {
   const [emailExists, setEmailExists] = useState(false);
   const [emailValid, setEmailValid] = useState(false);
 
+  const [nameInvalid, setNameInvalid] = useState(false);
+  const [passwordInvalid, setPasswordInvalid] = useState(false);
+
+  const [originalPassword, setOriginalPassword] = useState("");
+
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -49,6 +54,7 @@ const UserModal = ({ isModalOpen, onClose }) => {
         imageUrl: data?.imageUrl,
       });
       setImage(data?.imageUrl);
+      setOriginalPassword(data?.password);
     }
   }, [isModalOpen, form, data]);
 
@@ -87,9 +93,7 @@ const UserModal = ({ isModalOpen, onClose }) => {
     }
   };
 
-  useEffect(() => {
-    // console.log("Final image URL:", image);
-  }, [image, data]);
+  useEffect(() => {}, [image, data]);
 
   const checkUsername = async (value) => {
     if (value === data.username) {
@@ -98,7 +102,7 @@ const UserModal = ({ isModalOpen, onClose }) => {
       return;
     }
 
-    if (!value || value.length < 3) {
+    if (!value || value.length < 5) {
       setUsernameExists(false);
       setUsernameValid(false);
       return;
@@ -197,12 +201,17 @@ const UserModal = ({ isModalOpen, onClose }) => {
             imageUrl: image ? image : formValues.imageUrl,
           };
 
-          if (formValues.password) {
+          if (
+            formValues.password &&
+            formValues.password !== originalPassword &&
+            formValues.password !== "" &&
+            formValues.password !== " " &&
+            formValues.password !== null
+          ) {
             updatedUser.password = formValues.password;
           }
 
           await UserService.updateUser(localStorage.getItem("id"), updatedUser);
-
           onClose();
           message.success("Successfully updated user information.");
           queryClient.invalidateQueries({ queryKey: ["getUserById"] });
@@ -218,6 +227,17 @@ const UserModal = ({ isModalOpen, onClose }) => {
     });
   };
 
+  const isFormValid = () => {
+    const errors = form.getFieldsError();
+    return (
+      !errors.some((error) => error.errors.length > 0) &&
+      !emailExists &&
+      !usernameExists &&
+      !nameInvalid &&
+      !passwordInvalid
+    );
+  };
+
   return (
     <Modal
       className={darkMode ? "ant-modal-dark" : ""}
@@ -227,6 +247,7 @@ const UserModal = ({ isModalOpen, onClose }) => {
       closable={false}
       width={600}
       okButtonProps={{
+        disabled: !isFormValid(),
         style: {
           boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
         },
@@ -351,6 +372,7 @@ const UserModal = ({ isModalOpen, onClose }) => {
               onFinishFailed={(errorInfo) => {
                 console.log("Form submission failed:", errorInfo);
               }}
+              onValuesChange={() => form.validateFields()}
             >
               {/*Name*/}
               <label
@@ -372,13 +394,22 @@ const UserModal = ({ isModalOpen, onClose }) => {
                   },
                   {
                     pattern: /^[A-Za-z\s]+$/,
-                    message: "Name must only contain letters.",
+                    message:
+                      "Name must only contain letters and spaces, no numbers allowed.",
                   },
                 ]}
               >
                 <Input
                   prefix={<UserOutlined style={{ fontSize: 13 }} />}
                   placeholder="Enter Your Name"
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setNameInvalid(
+                      value.length < 3 ||
+                        value.length > 50 ||
+                        /[0-9]/.test(value)
+                    );
+                  }}
                 />
               </Form.Item>
 
@@ -423,6 +454,7 @@ const UserModal = ({ isModalOpen, onClose }) => {
               onFinishFailed={(errorInfo) => {
                 console.log("Form submission failed:", errorInfo);
               }}
+              onValuesChange={() => form.validateFields()}
             >
               {/*Username*/}
               <label
@@ -486,7 +518,22 @@ const UserModal = ({ isModalOpen, onClose }) => {
                   prefix={<LockOutlined style={{ fontSize: 13 }} />}
                   type="password"
                   autoComplete="off"
-                  // placeholder="Leave empty if you don't want to change"
+                  onChange={(e) => {
+                    const value = e.target.value;
+
+                    if (value === "") {
+                      setPasswordInvalid(false);
+                      form.setFieldsValue({
+                        password: "",
+                      });
+                    } else {
+                      setPasswordInvalid(
+                        !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/.test(
+                          value
+                        )
+                      );
+                    }
+                  }}
                 />
               </Form.Item>
             </Form>
