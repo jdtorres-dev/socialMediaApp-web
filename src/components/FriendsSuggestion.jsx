@@ -3,11 +3,21 @@ import { Input, List, Card, Avatar, Button, Dropdown, Menu } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { useTheme } from "../context/ThemeContext";
 const friendsData = [
-  { id: 1, name: "Alice Johnson", avatar: "" },
-  { id: 2, name: "Bob Smith", avatar: "" },
-  { id: 3, name: "Charlie Brown", avatar: "" },
-  { id: 4, name: "Diana Prince", avatar: "" },
-  { id: 5, name: "Eve Adams", avatar: "" },
+  {
+    id: 1,
+    name: "Alice Johnson",
+    username: "@alice_johnson01",
+    avatar: "https://www.svgrepo.com/show/446531/avatar.svg",
+  },
+  { id: 2, name: "Bob Smith", username: "@b.smith", avatar: "" },
+  {
+    id: 3,
+    name: "Charlie Brown",
+    username: "@brownies",
+    avatar: "https://www.svgrepo.com/show/446486/avatar.svg",
+  },
+  { id: 4, name: "Diana Prince", username: "@princeDiana99", avatar: "" },
+  { id: 5, name: "Eve Adams", username: "@evahhhh", avatar: "" },
 ];
 
 const FriendsSuggestion = () => {
@@ -53,7 +63,9 @@ const FriendsSuggestion = () => {
               icon={!friend.avatar && <UserOutlined />}
               style={{ marginRight: "10px" }}
             />
-            <span style={{ color: darkMode ? "white" : "black" }}>{friend.name}</span>
+            <span style={{ color: darkMode ? "white" : "black" }}>
+              {friend.name}
+            </span>
             <Button
               type="link"
               size="small"
@@ -69,7 +81,10 @@ const FriendsSuggestion = () => {
   );
 
   return (
-    <div className="friendsSuggestion-container" style={{backgroundColor: darkMode ? "#3b3b3b" : "White"}}>
+    <div
+      className="friendsSuggestion-container"
+      style={{ backgroundColor: darkMode ? "#3b3b3b" : "White" }}
+    >
       <Dropdown
         overlay={isMobileView && suggestions.length > 0 ? dropdownMenu : null}
         trigger={["click"]}
@@ -84,26 +99,67 @@ const FriendsSuggestion = () => {
       </Dropdown>
       {!isMobileView && (
         <List
-        style={{ backgroundColor: darkMode ? "#3b3b3b" : "White" }}
+          style={{
+            backgroundColor: darkMode ? "#3b3b3b" : "white",
+          }}
           itemLayout="horizontal"
           dataSource={suggestions}
           renderItem={(friend) => (
             <List.Item>
-              <Card style={{ width: "100%" , backgroundColor: darkMode ? "#3b3b3b" : "White" }}>
+              <Card
+                style={{
+                  width: "100%",
+                  backgroundColor: darkMode ? "#3b3b3b" : "white",
+                  // boxShadow: darkMode ? "0px 4px 6px rgba(0,0,0,0.1)" : "none",
+                  border: darkMode
+                    ? "1px solid rgba(0, 0, 0, 0.2)"
+                    : "1px solid #f5f5f5",
+                }}
+              >
                 <Card.Meta
                   avatar={
                     friend.avatar ? (
-                      <Avatar src={friend.avatar} />
+                      <Avatar
+                        src={friend.avatar}
+                        size={50}
+                        style={{ marginTop: 8, marginLeft: 10 }}
+                      />
                     ) : (
-                      <Avatar icon={<UserOutlined />} />
+                      <Avatar
+                        icon={<UserOutlined />}
+                        size={50}
+                        style={{ marginTop: 8, marginLeft: 10 }}
+                      />
                     )
                   }
-                  title={<span style={{ color: darkMode ? "white" : "black" }}>{friend.name}</span>}
+                  title={
+                    <div style={{ textAlign: "center" }}>
+                      <div
+                        style={{
+                          color: darkMode ? "white" : "black",
+                          fontSize: "13px",
+                        }}
+                      >
+                        {friend.name}
+                      </div>
+                      <div
+                        style={{
+                          marginTop: -3,
+                          color: darkMode ? "white" : "gray",
+                          fontWeight: 400,
+                          fontSize: "12px",
+                        }}
+                      >
+                        {friend.username}
+                      </div>
+                    </div>
+                  }
                   description={
                     <Button
                       type="primary"
                       size="small"
                       onClick={() => handleAddFriend(friend.id)}
+                      style={{ fontSize: 12 }}
                     >
                       Add Friend
                     </Button>
