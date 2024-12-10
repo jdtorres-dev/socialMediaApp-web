@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Avatar,
   Card,
@@ -71,11 +71,29 @@ const ViewPost = ({ setPost, post, setPosts, onPostUpdate }) => {
     </Menu>
   );
 
+  useEffect(() => {
+    if (post === null) {
+      const timeoutId = setTimeout(() => {
+        navigate("/not-found");
+      }, 10000);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [post, navigate]);
+
   if (post === null) {
     return (
-      <div style={{ textAlign: "center", marginTop: "20px" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100px",
+        }}
+      >
         <Spin size="large" />
-        <p>Loading post...</p>
+        <p style={{ color: darkMode ? "white" : "black", marginLeft: "10px" }}>
+          Loading post...
+        </p>
       </div>
     );
   }
@@ -147,7 +165,10 @@ const ViewPost = ({ setPost, post, setPosts, onPostUpdate }) => {
                   trigger={["click"]}
                 >
                   <PiDotsThreeBold
-                    style={{ color: "Blue", fontSize: "18px" }}
+                    style={{
+                      color: darkMode ? "lightgray" : "blue",
+                      fontSize: "20px",
+                    }}
                   />
                 </Dropdown>
               )}

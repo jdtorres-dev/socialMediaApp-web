@@ -129,7 +129,7 @@ const AddPost = () => {
         style={{
           display: "flex",
           flexDirection: "row",
-          maxWidth: "470px",
+          width: "500px",
           margin: "0 auto",
           padding: "15px",
           borderRadius: "8px",

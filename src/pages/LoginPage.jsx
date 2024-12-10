@@ -137,7 +137,7 @@ const LoginPage = () => {
                 type="primary"
                 htmlType="submit"
                 className="login-form-button"
-                style={{ marginTop: 3 }}
+                style={{ marginTop: 5 }}
               >
                 Login
               </Button>

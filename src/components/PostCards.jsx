@@ -79,7 +79,7 @@ const PostCards = ({ posts, setPosts }) => {
 
   return (
     <>
-      <div style={{ maxWidth: 500, margin: "0 auto", padding: "15px" }}>
+      <div style={{ width: 530, margin: "0 auto", padding: "15px" }}>
         {/* Display each post in a Card */}
         {posts.map((post) => (
           <Card

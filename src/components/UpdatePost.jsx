@@ -247,7 +247,7 @@ const UpdatePost = ({ onOpen, onClose, post, onPostUpdate }) => {
             rules={[{ required: true, message: "Please input your post!" }]}
           >
             <TextArea
-              autoSize={{ minRows: 2, maxRows: 3 }}
+              autoSize={{ minRows: 2, maxRows: 5 }}
               style={{
                 width: "100%",
               }}
@@ -282,7 +282,7 @@ const UpdatePost = ({ onOpen, onClose, post, onPostUpdate }) => {
       </div>
       <Divider
         style={{
-          borderColor: darkMode ? "white" : "gray",
+          borderColor: darkMode ? "#3B3B3B" : "#F5F5F5",
           marginTop: 0,
           marginBottom: 15,
           height: 5,

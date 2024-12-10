@@ -225,7 +225,7 @@ const UserModal = ({ isModalOpen, onClose }) => {
       onCancel={onClose}
       onOk={showConfirmUpdate}
       closable={false}
-      width={580}
+      width={600}
       okButtonProps={{
         style: {
           boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
@@ -276,23 +276,16 @@ const UserModal = ({ isModalOpen, onClose }) => {
           >
             <div>
               {image ? (
-                <div>
-                  <Avatar
-                    src={image}
-                    style={{ height: 90, width: 90, border: "50%" }}
-                  />
-                </div>
+                <Avatar
+                  src={image}
+                  style={{ height: 90, width: 90, border: "50%" }}
+                />
               ) : (
-                <div>
-                  <Avatar
-                    src={data?.imageUrl}
-                    style={{ height: 90, width: 90, fontSize: 70 }}
-                  >
-                    {!data?.imageUrl && data?.username
-                      ? data.username.charAt(0).toUpperCase()
-                      : null}
-                  </Avatar>
-                </div>
+                <Avatar style={{ height: 90, width: 90, fontSize: 65 }}>
+                  {data?.username
+                    ? data.username.charAt(0).toUpperCase()
+                    : null}
+                </Avatar>
               )}
             </div>
 
@@ -337,13 +330,12 @@ const UserModal = ({ isModalOpen, onClose }) => {
                   }}
                 />
                 <Button
-                  onClick={() => setImage(data.imageUrl)}
+                  onClick={() => setImage("")}
                   style={{
                     width: 40,
                     height: 25,
                     border: "1px solid red",
                     borderRadius: 15,
-                    color: darkMode ? "#fff" : "gray",
                   }}
                   icon={<GoTrash style={{ fontSize: 18, color: "red" }} />}
                 />
@@ -503,7 +495,7 @@ const UserModal = ({ isModalOpen, onClose }) => {
       </div>
       <Divider
         style={{
-          borderColor: darkMode ? "white" : "gray",
+          borderColor: darkMode ? "#3B3B3B" : "#F5F5F5",
           marginTop: 10,
           marginBottom: 10,
           height: 5,

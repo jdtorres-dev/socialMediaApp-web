@@ -7,6 +7,7 @@ import {
   Typography,
   Avatar,
   Row,
+  Spin,
 } from "antd";
 import React, { useState } from "react";
 import { useTheme } from "../context/ThemeContext";
@@ -19,6 +20,7 @@ const ViewAllCommentsPerPost = ({
   comments = [],
   onDeleteComment,
   onUpdateComment,
+  isLoading,
 }) => {
   const { darkMode } = useTheme();
   const { currentUser } = useAuth();
@@ -58,134 +60,163 @@ const ViewAllCommentsPerPost = ({
   );
 
   return (
-    <div style={{ padding: "8px" }}>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
-        {comments.length > 0 ? (
-          comments.map((comment) => (
-            <div key={comment.id}>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                  }}
-                >
-                  <Avatar src={comment.user?.imageUrl}>
-                    {!comment.user?.imageUrl && comment.user?.username
-                      ? comment.user.username.charAt(0).toUpperCase()
-                      : null}
-                  </Avatar>
-
-                  <Typography
-                    level={4}
+    <>
+      {isLoading ? (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100px",
+            marginTop: "5px",
+          }}
+        >
+          <Spin size="large" />
+          <p
+            style={{ color: darkMode ? "white" : "black", marginLeft: "10px" }}
+          >
+            Loading comments...
+          </p>
+        </div>
+      ) : (
+        <div style={{ padding: "8px" }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            {comments.length > 0 ? (
+              comments.map((comment) => (
+                <div key={comment.id}>
+                  <div
                     style={{
-                      color: darkMode ? "white" : "black",
-                      fontWeight: "600",
-                      paddingRight: "3px",
-                      paddingLeft: "5px",
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "space-between",
                     }}
                   >
-                    {comment.user ? comment.user.name : "Unknown"}
-                  </Typography>
-
-                  <Typography
-                    level={4}
-                    style={{
-                      color: darkMode ? "white" : "black",
-                      fontSize: "11px",
-                    }}
-                  >
-                    @{comment.user ? comment.user.username : "Unknown"}
-                  </Typography>
-                </div>
-                <div>
-                  {comment.user.id === Number(currentUser.id) && (
-                    <Dropdown
+                    <div
                       style={{
-                        position: "absolute",
-                        border: "0px",
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
                       }}
-                      overlay={settingsMenu(comment.id, comment)}
-                      trigger={["click"]}
                     >
-                      <PiDotsThreeBold
+                      <Avatar src={comment.user?.imageUrl}>
+                        {!comment.user?.imageUrl && comment.user?.username
+                          ? comment.user.username.charAt(0).toUpperCase()
+                          : null}
+                      </Avatar>
+
+                      <Typography
+                        level={4}
                         style={{
-                          color: darkMode ? "lightgray" : "blue",
-                          fontSize: "20px",
+                          color: darkMode ? "white" : "black",
+                          fontWeight: "600",
+                          paddingRight: "3px",
+                          paddingLeft: "5px",
                         }}
-                      />
-                    </Dropdown>
-                  )}
-                </div>
-              </div>
-              <Col span={24}>
-                <Row
-                  style={{
-                    alignItems: "end",
-                    justifyContent: "end",
-                  }}
-                >
-                  <text
-                    type="secondary"
+                      >
+                        {comment.user ? comment.user.name : "Unknown"}
+                      </Typography>
+
+                      <Typography
+                        level={4}
+                        style={{
+                          color: darkMode ? "white" : "black",
+                          fontSize: "11px",
+                        }}
+                      >
+                        @{comment.user ? comment.user.username : "Unknown"}
+                      </Typography>
+                    </div>
+                    <div>
+                      {comment.user.id === Number(currentUser.id) && (
+                        <Dropdown
+                          style={{
+                            position: "absolute",
+                            border: "0px",
+                          }}
+                          overlay={settingsMenu(comment.id, comment)}
+                          trigger={["click"]}
+                        >
+                          <PiDotsThreeBold
+                            style={{
+                              color: darkMode ? "lightgray" : "blue",
+                              fontSize: "20px",
+                            }}
+                          />
+                        </Dropdown>
+                      )}
+                    </div>
+                  </div>
+                  <Col span={24}>
+                    <Row
+                      style={{
+                        alignItems: "end",
+                        justifyContent: "end",
+                      }}
+                    >
+                      <text
+                        type="secondary"
+                        style={{
+                          marginLeft: "8px",
+                          color: darkMode ? "white" : "black",
+                          fontSize: "0.6rem",
+                        }}
+                      >
+                        {new Date(comment.createdDate).toLocaleString()}
+                      </text>
+                    </Row>
+                  </Col>
+                  <Col span={24}>
+                    <Typography
+                      style={{
+                        color: darkMode ? "White" : "Black",
+                        marginLeft: "38px",
+                      }}
+                    >
+                      {comment.commentBody}
+                    </Typography>
+                  </Col>
+                  <LikeUnlikeComment comment={comment} />
+                  <Divider
                     style={{
-                      marginLeft: "8px",
-                      color: darkMode ? "white" : "black",
-                      fontSize: "0.6rem",
+                      borderColor: darkMode ? "#3B3B3B" : "#F5F5F5",
+                      marginTop: 5,
+                      marginBottom: 10,
                     }}
-                  >
-                    {new Date(comment.createdDate).toLocaleString()}
-                  </text>
-                </Row>
-              </Col>
+                  />
+                </div>
+              ))
+            ) : (
               <Col span={24}>
-                <Typography
-                  style={{
-                    color: darkMode ? "White" : "Black",
-                    marginLeft: "38px",
-                  }}
-                >
-                  {comment.commentBody}
+                <Typography style={{ color: darkMode ? "white" : "black" }}>
+                  No comments available.
                 </Typography>
               </Col>
-              <LikeUnlikeComment comment={comment} />
-              <Divider />
-            </div>
-          ))
-        ) : (
-          <Col span={24}>
-            <Typography>No comments available.</Typography>
-          </Col>
-        )}
-      </div>
+            )}
+          </div>
 
-      {/* Modal for editing the comment */}
-      <Modal
-        className={darkMode ? "ant-modal-dark" : ""}
-        title="Edit Comment"
-        visible={isModalVisible}
-        onCancel={handleModalClose}
-        footer={null}
-      >
-        <UpdateComment
-          comment={selectedComment}
-          onClose={handleModalClose}
-          onUpdate={onUpdateComment}
-        />
-      </Modal>
-    </div>
+          {/* Modal for editing the comment */}
+          <Modal
+            className={darkMode ? "ant-modal-dark" : ""}
+            title="Edit Comment"
+            visible={isModalVisible}
+            onCancel={handleModalClose}
+            footer={null}
+          >
+            <UpdateComment
+              comment={selectedComment}
+              onClose={handleModalClose}
+              onUpdate={onUpdateComment}
+            />
+          </Modal>
+        </div>
+      )}
+    </>
   );
 };
 
