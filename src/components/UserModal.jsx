@@ -206,6 +206,8 @@ const UserModal = ({ isModalOpen, onClose }) => {
             username: formValues.username,
             email: formValues.email,
             imageUrl: image ? image : formValues.imageUrl,
+            bio: formValues.bio,
+            interest: formValues.interest
           };
 
           if (
@@ -449,7 +451,45 @@ const UserModal = ({ isModalOpen, onClose }) => {
                 />
               </Form.Item>
 
-              {/*New Password*/}
+              {/*Interest*/}
+              <label
+                style={{ marginTop: "-12px", color: "darkgray", fontSize: 11 }}
+              >
+                Interest
+              </label>
+              <Form.Item
+                name="interest"
+                rules={[
+                  { required: false, message: "Please input your name." },
+                  {
+                    min: 3,
+                    message: "Interest must be at least 3 characters.",
+                  },
+                  {
+                    max: 200,
+                    message: "Interest must be less than 200 characters long.",
+                  },
+                  // {
+                  //   pattern: /^[A-Za-z0-9._-]+$/,
+                  //   message:
+                  //     "Username can only contain letters, numbers, and special characters (-, _, .).",
+                  // },
+                ]}
+              >
+                <Input
+                  prefix={<UserOutlined style={{ fontSize: 13}} />}
+                  placeholder="Enter Your Interest"
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setNameInvalid(
+                      value.length < 3 ||
+                        value.length > 200 ||
+                        /[0-9]/.test(value)
+                    );
+                  }}
+                />
+              </Form.Item>
+
             </Form>
           </div>
 
@@ -481,11 +521,11 @@ const UserModal = ({ isModalOpen, onClose }) => {
                     max: 50,
                     message: "Username must be less than 50 characters.",
                   },
-                  {
-                    pattern: /^[A-Za-z0-9._-]+$/,
-                    message:
-                      "Username can only contain letters, numbers, and special characters (-, _, .).",
-                  },
+                  // {
+                  //   pattern: /^[A-Za-z0-9._-]+$/,
+                  //   message:
+                  //     "Username can only contain letters, numbers, and special characters (-, _, .).",
+                  // },
                 ]}
               >
                 <Input
@@ -543,6 +583,46 @@ const UserModal = ({ isModalOpen, onClose }) => {
                   }}
                 />
               </Form.Item>
+
+              {/*Bio*/}
+              <label
+                style={{ marginTop: "-12px", color: "darkgray", fontSize: 11 }}
+              >
+                Bio
+              </label>
+              <Form.Item
+                name="bio"
+                rules={[
+                  { required: false, message: "Please input your name." },
+                  {
+                    min: 3,
+                    message: "Bio must be at least 3 characters.",
+                  },
+                  {
+                    max: 200,
+                    message: "Bio must be less than 200 characters long.",
+                  },
+                  // {
+                  //   pattern: /^[A-Za-z0-9._-]+$/,
+                  //   message:
+                  //     "Username can only contain letters, numbers, and special characters (-, _, .).",
+                  // },
+                ]}
+              >
+                <Input
+                  prefix={<UserOutlined style={{ fontSize: 13 }} />}
+                  placeholder="Enter Your Bio"
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setNameInvalid(
+                      value.length < 3 ||
+                        value.length > 200 ||
+                        /[0-9]/.test(value)
+                    );
+                  }}
+                />
+              </Form.Item>
+              
             </Form>
           </div>
         </div>

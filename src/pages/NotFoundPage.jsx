@@ -56,7 +56,8 @@ const NotFoundPage = () => {
               borderRadius: 15,
             }}
             onClick={() => {
-              navigate(-3);
+              // navigate(-3);
+              navigate("/home");
             }}
           >
             Go back
