@@ -213,10 +213,20 @@ const Profile = () => {
             >
               <Form.Item
                 name="body"
-                rules={[{ required: true, message: "Please input your post!" }]}
+                rules={[
+                  { required: true, message: "Please input your post!" },
+                  {
+                    min: 1,
+                    message: "Post must be at least 1 character.",
+                  },
+                  {
+                    max: 255,
+                    message: "Post must be less than 255 characters.",
+                  },
+                ]}
               >
                 <TextArea
-                  autoSize={{ minRows: 1, maxRows: 1 }}
+                  autoSize={{ minRows: 1, maxRows: 3 }}
                   style={{
                     backgroundColor: "transparent",
                     color: darkMode ? "white" : "black",

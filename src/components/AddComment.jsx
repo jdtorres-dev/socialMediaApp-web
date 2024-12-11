@@ -115,6 +115,14 @@ const AddComment = ({ postDetails }) => {
               name="commentBody"
               rules={[
                 { required: true, message: "Please input your comment!" },
+                {
+                  min: 1,
+                  message: "Comment must be at least 1 character.",
+                },
+                {
+                  max: 255,
+                  message: "Comment must be less than 255 characters.",
+                },
               ]}
             >
               <TextArea

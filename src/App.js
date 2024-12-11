@@ -34,14 +34,36 @@ function App() {
         path="/home"
         element={currentUser.id ? <HomePage /> : <Navigate to="/login" />}
       />
-      <Route
+      {/* <Route
         path="/profile"
         element={currentUser.id ? <ProfilePage /> : <Navigate to="/login" />}
-      />
+      /> */}
       <Route
         path="/post/:id"
         element={currentUser.id ? <ViewPostPage /> : <Navigate to="/login" />}
       />
+
+      {/* <Route
+        path="/profile"
+        element={<Navigate to={`/profile/${currentUser.id}`} replace />}
+      />
+      <Route path="/profile/:id" element={<ProfilePage />} /> */}
+
+      <Route
+        path="/profile"
+        element={
+          currentUser.id ? (
+            <Navigate to={`/profile/${currentUser.id}`} replace />
+          ) : (
+            <Navigate to="/login" />
+          )
+        }
+      />
+      <Route
+        path="/profile/:id"
+        element={currentUser.id ? <ProfilePage /> : <Navigate to="/login" />}
+      />
+
       {/* <Route path="/home" element={<HomePage />} />
       <Route path="/profile" element={<ProfilePage />} />
       <Route path="/post/:id" element={<ViewPostPage />} /> */}

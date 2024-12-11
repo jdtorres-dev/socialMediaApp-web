@@ -105,7 +105,9 @@ const PostCards = ({ posts, setPosts }) => {
                   display: "flex",
                   flexDirection: "row",
                   alignItems: "center",
+                  cursor: "pointer",
                 }}
+                onClick={() => navigate(`/profile/${post.user?.id}`)} // Redirect to the user's profile page
               >
                 <Avatar src={post.user?.imageUrl}>
                   {!post.user?.imageUrl && post.user?.username

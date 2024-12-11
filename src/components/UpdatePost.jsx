@@ -252,11 +252,11 @@ const UpdatePost = ({ onOpen, onClose, post, onPostUpdate }) => {
               { required: true, message: "Please input your post!" },
               {
                 min: 1,
-                message: "Body must be at least 1 character.",
+                message: "Post must be at least 1 character.",
               },
               {
                 max: 255,
-                message: "Body must be less than 255 character.",
+                message: "Post must be less than 255 characters.",
               },
             ]}
           >

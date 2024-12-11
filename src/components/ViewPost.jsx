@@ -75,7 +75,7 @@ const ViewPost = ({ setPost, post, setPosts, onPostUpdate }) => {
     if (post === null) {
       const timeoutId = setTimeout(() => {
         navigate("/not-found");
-      }, 10000);
+      }, 3000);
       return () => clearTimeout(timeoutId);
     }
   }, [post, navigate]);

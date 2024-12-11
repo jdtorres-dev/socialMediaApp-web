@@ -2,6 +2,8 @@ import { Button, Col, Form, Input, Modal, Row } from 'antd';
 import React, { useEffect, useState } from "react";
 import "../styles/Modal.css";
 
+const { TextArea } = Input;
+
 const UpdateComment = ({ comment, onUpdate, onClose }) => {
   const [form] = Form.useForm();
   console.log(comment);
@@ -58,14 +60,23 @@ const UpdateComment = ({ comment, onUpdate, onClose }) => {
               name="commentBody"
               rules={[
                 { required: true, message: "Please input your comment!" },
+                {
+                  min: 1,
+                  message: "Comment must be at least 1 character.",
+                },
+                {
+                  max: 255,
+                  message: "Comment must be less than 255 characters.",
+                },
               ]}
             >
-              <Input
+              <TextArea
+                autoSize={{ minRows: 2, maxRows: 5 }}
+                style={{ padding: "5px", width: "100%" }}
                 onChange={(e) => {
                   const value = e.target.value;
                   setCommentBodyInvalid(value.length < 1 || value.length > 255);
                 }}
-                style={{ padding: "5px", width: "100%" }}
               />
             </Form.Item>
           </Col>
