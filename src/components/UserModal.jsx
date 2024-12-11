@@ -52,6 +52,8 @@ const UserModal = ({ isModalOpen, onClose }) => {
         username: data?.username,
         email: data?.email,
         imageUrl: data?.imageUrl,
+        interest: data?.interest,
+        bio: data?.bio
       });
       setImage(data?.imageUrl);
       setOriginalPassword(data?.password);
@@ -487,6 +489,7 @@ const UserModal = ({ isModalOpen, onClose }) => {
                         /[0-9]/.test(value)
                     );
                   }}
+                  style={{ height: '140px', fontSize: '14px', padding: '10px' }} // Adjust height here
                 />
               </Form.Item>
 

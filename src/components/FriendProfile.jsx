@@ -130,7 +130,9 @@ const FriendProfile = ({ userId }) => {  // Accepting userId as a prop
           </p>
         </div>
       ) : (
-        <PostCards posts={posts} setPosts={setPosts} />
+        <div style={{ marginTop: "-15px" }}>
+          <PostCards posts={posts} setPosts={setPosts} />
+        </div>
       )}
     </>
   );
