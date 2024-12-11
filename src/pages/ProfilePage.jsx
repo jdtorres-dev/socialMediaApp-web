@@ -5,10 +5,20 @@ import ProfileNav from "../components/ProfileNav"; // Import the SideNav compone
 import TrendingColumn from "../components/TrendingColumn";
 import "../styles/ProfilePage.css";
 import { useTheme } from "../context/ThemeContext";
+import FriendProfile from "../components/FriendProfile";
+import { useAuth } from "../context/AuthContext";
+import { useParams } from "react-router-dom";
 
 const ProfilePage = () => {
   const { darkMode } = useTheme();
 
+  const { currentUser } = useAuth();
+
+  const { id } = useParams(); // Get the user ID from the URL
+
+   // Debug: Print the current user
+  //  console.log("Current User:", currentUser);
+  //  console.log("id:", id);
   return (
     <>
       <Navbar />
@@ -25,11 +35,16 @@ const ProfilePage = () => {
       <div className="parent-profile" style={{ marginTop: "0px",  backgroundColor: darkMode ? "#3b3b3b" : "White" }}>
         <div className="box-30" style={{ backgroundColor: darkMode ? "#3b3b3b" : "White"}}>
           <div>
-            <ProfileNav />
+            <ProfileNav userId={id} />
           </div>
         </div>
         <div className="box-70" style={{ backgroundColor: darkMode ? "#3b3b3b" : "White"}}>
-          <Profile />
+          {/* <Profile /> */}
+          {id == currentUser?.id ? (
+            <Profile /> // Show Profile component if the user is the current user
+          ) : (
+            <FriendProfile userId={id} />
+          )}
         </div>
         <div className="box-trending" style={{ backgroundColor: darkMode ? "#3b3b3b" : "White"}}>
             <TrendingColumn />

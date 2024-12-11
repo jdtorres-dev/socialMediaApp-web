@@ -156,6 +156,10 @@ const SignupPage = () => {
       const requestData = {
         ...values,
         imageUrl: image,
+        address: "",
+        interest: "",
+        contact: "",
+        bio: ""
       };
       console.log(requestData);
 

@@ -11,13 +11,13 @@ import { useAuth } from "../context/AuthContext";
 import { useGetUserById } from "../queries/UserQueries";
 const { Text } = Typography;
 
-const ProfileNav = () => {
+const ProfileNav = ({ userId }) => {
   const { darkMode } = useTheme();
   const [updateUser, setUpdateUser] = useState(false);
 
   // get details
   const { currentUser } = useAuth();
-  const { data } = useGetUserById(currentUser.id);
+  const { data } = useGetUserById(userId);
 
   return (
     <>
@@ -74,17 +74,21 @@ const ProfileNav = () => {
           >
             This is my bio.
           </Text>
-          <Button
-            type="primary"
-            style={{
-              backgroundColor: "#1890ff",
-              borderColor: "#1890ff",
-              marginTop: "20px",
-            }}
-            onClick={() => setUpdateUser(true)}
-          >
-            Edit Profile
-          </Button>
+          <div>
+            {userId == currentUser?.id && (
+              <Button
+                type="primary"
+                style={{
+                  backgroundColor: "#1890ff",
+                  borderColor: "#1890ff",
+                  marginTop: "20px",
+                }}
+                onClick={() => setUpdateUser(true)}
+              >
+                Edit Profile
+              </Button>
+            )}
+          </div>
         </div>
 
         <Divider />
