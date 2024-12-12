@@ -48,6 +48,7 @@
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   background-color: #fff;
+  position: relative;
 }
 
 @media (max-width: 910px) {
@@ -101,4 +102,64 @@
       width: auto; /* Adjust width for responsive layout */
       max-width: 470px;
   }
+}
+
+/* Image Overlay CSS */
+.profile-container {
+  width: 330px; /* Fixed width */
+  height: 400px; /* Fixed height */
+  background-color: lightgray;
+  overflow: hidden;
+   /* Ensure no overflow */
+}
+@media (max-width: 910px) {
+  .profile-container {
+      width: 470px;
+      height: 500px;
+      border-radius: 50px; /* Adjust the value to control the roundness */
+  }
+}
+
+.profile-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0) 100%);
+  pointer-events: none; /* Ensures that the gradient doesn't interfere with other interactions */
+  border-radius: 10px;
+}
+
+.responsive-image {
+  max-width: 100%;
+  max-height: 100%;
+  margin: auto; /* Centers the image if it's smaller */
+  display: block; /* Ensures block-level behavior */
+}
+
+.container {
+  position: relative;
+  text-align: center;
+  color: white;
+}
+
+/* Bottom left text */
+.bottom-left {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  text-align: left;
+}
+
+
+/* This is my interest */
+.text-justified {
+  width: 100%; /* Adjust width as needed */
+  text-align: left; /* Aligns text to the left */
+  /* text-justify: inter-word; Justifies the text with even spaces between words */
+  padding: 10px 10px 10px 40px; /* Optional padding for spacing */
+  font-size: 22px;
+  font-weight: 500;
 }

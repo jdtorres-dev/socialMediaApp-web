@@ -110,33 +110,6 @@ const FriendProfile = ({ userId }) => {  // Accepting userId as a prop
     }
   };
 
-  useEffect(() => {
-    if (posts === null) {
-      const timeoutId = setTimeout(() => {
-        navigate("/not-found");
-      }, 3000);
-      return () => clearTimeout(timeoutId);
-    }
-  }, [posts, navigate]);
-
-  if (posts === null) {
-    return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100px",
-        }}
-      >
-        <Spin size="large" />
-        <p style={{ color: darkMode ? "white" : "black", marginLeft: "10px" }}>
-          Loading post...
-        </p>
-      </div>
-    );
-  }
-
   return (
     <>
       {/* Posts */}
@@ -157,7 +130,9 @@ const FriendProfile = ({ userId }) => {  // Accepting userId as a prop
           </p>
         </div>
       ) : (
-        <PostCards posts={posts} setPosts={setPosts} />
+        <div style={{ marginTop: "-15px" }}>
+          <PostCards posts={posts} setPosts={setPosts} />
+        </div>
       )}
     </>
   );
